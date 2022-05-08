@@ -19,7 +19,7 @@ public class AuthenticationRestEndpoint {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@Valid @RequestBody  AuthenticationRequest authenticationRequest) {
+    public ResponseEntity<String> login(@Valid @RequestBody AuthenticationRequest authenticationRequest) {
         try {
             final String token = authenticationService.generateSessionToken(authenticationRequest);
             return ResponseEntity.ok(token);
