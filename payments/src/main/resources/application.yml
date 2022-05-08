@@ -1,0 +1,16 @@
+#TODO: Replace spring.datasource.* after contenerization
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  sql:
+    init:
+      platform: postgres
+  datasource:
+    url: jdbc:postgresql://localhost:16832/payments_mcsv
+    username: postgres
+    password: root
