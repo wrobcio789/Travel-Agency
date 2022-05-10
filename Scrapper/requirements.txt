@@ -1,0 +1,4 @@
+requests~=2.27.1
+lxml~=4.8.0
+selenium~=3.141.0
+numpy~=1.21.6
