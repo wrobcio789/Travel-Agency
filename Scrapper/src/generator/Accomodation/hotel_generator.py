@@ -55,11 +55,11 @@ def generate_hotels(arrivals: dict, names: dict, output_dir_path: str, compact=T
 
     for hotel in hotels:
         rooms = []
-        for capacity in range(1, 7):
+        for room_size in ["small", "medium", "large", "apartment", "studio"]:
             room_count = random.randint(5, 20)
             newborns_friendly = bool(random.getrandbits(1))
             amenities = amenities_subset(hotel.amenities)
-            rooms.append(Room(capacity, room_count, newborns_friendly, amenities))
+            rooms.append(Room(room_size, room_count, newborns_friendly, amenities))
         hotel.rooms = rooms
     if compact:
         utils.save_json(hotels, f"{output_dir_path}/hotels.json", pretty=False)
