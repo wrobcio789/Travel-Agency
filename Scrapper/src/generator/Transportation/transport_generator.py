@@ -7,18 +7,18 @@ from generator.Transportation.transportation import Transportation
 def generate_transportation(arrivals: dict, departures: list, names: dict, output_dir_path: str, compact=True,
                             pretty=False):
     transportation_people_ranges = {
-        "plane": {"from": 100, "to": 200, "step": 10},
-        "ship": {"from": 100, "to": 300, "step": 10},
-        "train": {"from": 100, "to": 500, "step": 10}
+        "plane": {"from": 50, "to": 150, "step": 5},
+        "bus": {"from": 10, "to": 50, "step": 2},
+        "train": {"from": 100, "to": 300, "step": 10}
     }
     transportation_types_prob = {
         "plane": 1,
-        "ship": 0.2,
+        "bus": 0.5,
         "train": 0.1
     }
     transportation_names_ctr = {
         "plane": 0,
-        "ship": 0,
+        "bus": 0,
         "train": 0
     }
 
@@ -31,7 +31,7 @@ def generate_transportation(arrivals: dict, departures: list, names: dict, outpu
                     transport_names = names[transport]
                     if chance <= prob:
                         t = transportation_people_ranges[transport]
-                        capacity = random.randint(t["from"], t["to"] + 1)
+                        capacity = random.randrange(t["from"], t["to"] + 1, step=t["step"])
                         for _arrival, _departure in [(city, departure), (departure, city)]:
                             name = transport_names[transportation_names_ctr[transport] % len(transport_names)]
                             transports.append(Transportation(name, transport, capacity, _arrival, _departure))
