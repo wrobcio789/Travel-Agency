@@ -1,0 +1,40 @@
+﻿using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
+using Pg.Rsww.RedTeam.EventHandler.Commands;
+using Pg.Rsww.RedTeam.EventHandler.Settings;
+using Pg.Rsww.RedTeam.EventHandler.Workers;
+
+namespace Pg.Rsww.RedTeam.EventHandler.Services;
+
+public class QueueReceiveService : BackgroundService
+{
+	private readonly IEnumerable<IQueueCommand> _commands;
+	private readonly RabbitMQSettings _rabbitMqSettings;
+
+	public QueueReceiveService(
+		IEnumerable<IQueueCommand> commands,
+		IOptions<RabbitMQSettings> rabbitMqSettings
+	)
+	{
+		_commands = commands;
+		_rabbitMqSettings = rabbitMqSettings.Value;
+	}
+
+	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+	{
+		if (!_commands.Any())
+		{
+			return;
+		}
+		var consumers = new List<QueueWorker>();
+		var tasks = new List<Task>();
+		foreach (var action in _commands)
+		{
+			var consumer = new QueueWorker(_rabbitMqSettings, action.QueueName, action.Command);
+			consumers.Add(consumer);
+			tasks.Add(consumer.StartAsync(stoppingToken));
+		}
+		
+		Task.WaitAll(tasks.ToArray());
+	}
+}

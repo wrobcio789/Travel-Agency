@@ -1,0 +1,105 @@
+version: '3.4'
+
+services:
+  touroperator:
+    container_name: tour-operator
+    image: tour-operator
+    restart: always
+    build:
+      context: ./TourOperator
+      dockerfile: Dockerfile
+    environment:
+      ASPNETCORE_URLS: http://+:80
+      ASPNETCORE_HTTPS_PORT: https://+:443
+      ASPNETCORE_ENVIRONMENT: Development
+    ports:
+      - 5000:80
+      - 5001:443
+    networks:
+      back:
+      front:
+  offerservice:
+    container_name: offer-service
+    image: offer-service
+    restart: always
+    build:
+      context: ./services
+      dockerfile: Dockerfile.Offer
+    environment:
+      ASPNETCORE_URLS: http://+:80
+      ASPNETCORE_HTTPS_PORT: https://+:443
+      ASPNETCORE_ENVIRONMENT: Development
+    ports:
+      - 5002:80
+      - 5003:443
+    networks:
+      back:
+      front:
+    depends_on:
+      - touroperator
+  orderservice:
+    container_name: order-service
+    image: order-service
+    restart: always
+    build:
+      context: ./services
+      dockerfile: Dockerfile.Order
+    environment:
+      ASPNETCORE_URLS: http://+:80
+      ASPNETCORE_HTTPS_PORT: https://+:443
+      ASPNETCORE_ENVIRONMENT: Development
+    ports:
+      - 5004:80
+      - 5005:443
+    networks:
+      back:
+      front:
+  mongo:
+    container_name: mongo
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_DATABASE: example-db
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    ports:
+      - 27017-27019:27017-27019
+    networks:
+      back:
+      front:
+      
+  mongo-express:
+    container_name: mongo-express
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
+    networks:
+      back:
+      front:
+      
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3-management-alpine
+    restart: always
+    ports:
+      - 5672:5672
+      - 15672:15672
+    networks:
+      back:
+      front:
+
+networks:
+  back:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      - subnet: "172.18.0.0/24"
+        gateway: 172.18.0.1
+  front:
+    driver: bridge
