@@ -1,0 +1,23 @@
+FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
+WORKDIR /app
+EXPOSE 80
+EXPOSE 443
+
+ARG PROJECT_NAME=Pg.Rsww.RedTeam.OfferService.Api
+
+
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+WORKDIR /src
+COPY ["src/Pg.Rsww.RedTeam.OfferService.Api/Pg.Rsww.RedTeam.OfferService.Api.csproj", "Pg.Rsww.RedTeam.OfferService.Api/"]
+RUN dotnet restore "Pg.Rsww.RedTeam.OfferService.Api/Pg.Rsww.RedTeam.OfferService.Api.csproj"
+COPY src .
+WORKDIR "/src/Pg.Rsww.RedTeam.OfferService.Api"
+RUN dotnet build "Pg.Rsww.RedTeam.OfferService.Api.csproj" -c Release -o /app/build
+
+FROM build AS publish
+RUN dotnet publish "Pg.Rsww.RedTeam.OfferService.Api.csproj" -c Release -o /app/publish
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "Pg.Rsww.RedTeam.OfferService.Api.dll"]

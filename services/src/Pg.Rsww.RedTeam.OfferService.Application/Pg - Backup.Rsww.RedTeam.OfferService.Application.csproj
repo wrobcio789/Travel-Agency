@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Pg.Rsww.RedTeam.DataStorage\Pg.Rsww.RedTeam.DataStorage.csproj" />
+    <ProjectReference Include="..\Pg.Rsww.RedTeam.EventHandler\Pg.Rsww.RedTeam.EventHandler.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Events\ReceiveActions\" />
+    <Folder Include="Events\RpcServerActions\" />
+    <Folder Include="ExternalServices\TourOperator\" />
+    <Folder Include="Mappers\" />
+    <Folder Include="Models\Entities\" />
+    <Folder Include="Models\Events\" />
+    <Folder Include="Models\Loader\" />
+    <Folder Include="Models\Offer\Requests\" />
+    <Folder Include="Models\Offer\Responses\" />
+    <Folder Include="Services\" />
+    <Folder Include="Workers\" />
+  </ItemGroup>
+
+</Project>
