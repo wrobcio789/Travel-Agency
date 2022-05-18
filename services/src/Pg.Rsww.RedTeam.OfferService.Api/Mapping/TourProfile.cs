@@ -14,7 +14,9 @@ public class TourProfile : Profile
 			.ForMember(dest => dest.Price, act => act.MapFrom(src => src.Price))
 			.ForMember(dest => dest.StartDate, act => act.MapFrom(src => ParseDate(src.Start)))
 			.ForMember(dest => dest.EndDate, act => act.MapFrom(src => ParseDate(src.End)))
-			.ForMember(dest => dest.Title, act => act.MapFrom(src => src.Title));
+			.ForMember(dest => dest.Title, act => act.MapFrom(src => src.Title))
+			.ForMember(dest => dest.City, act => act.MapFrom(src => src.City))
+			.ForMember(dest => dest.Country, act => act.MapFrom(src => src.Country));
 
 		CreateMap<TourEntity, Models.TourResponse>();
 	}

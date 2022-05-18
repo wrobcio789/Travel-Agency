@@ -54,4 +54,31 @@ public class TransportRepository : MongoBaseRepository<TransportEntity>
 		var transports = await _collection.Find(filter).ToListAsync();
 		return transports.FirstOrDefault();
 	}
+
+	public async Task<TransportEntity> GetSingleAsync(string departure, string arrival, TransportType type)
+	{
+		var builder = Builders<TransportEntity>.Filter;
+		var filter = builder.Empty;
+
+		if (type!=TransportType.Own)
+		{
+			if (!string.IsNullOrWhiteSpace(departure))
+			{
+				var departureFilter = builder.Eq(x => x.Departure, departure);
+				filter &= departureFilter;
+			}
+
+			if (!string.IsNullOrWhiteSpace(arrival))
+			{
+				var departureFilter = builder.Eq(x => x.Arrival, arrival);
+				filter &= departureFilter;
+			}
+		}
+
+		var typeFilter = builder.Eq(x => x.Type, type);
+		filter &= typeFilter;
+
+		var transports = await _collection.Find(filter).ToListAsync();
+		return transports.FirstOrDefault();
+	}
 }

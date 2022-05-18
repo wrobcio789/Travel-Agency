@@ -9,55 +9,53 @@ namespace Pg.Rsww.RedTeam.OfferService.Application.Services;
 
 public class OfferService
 {
-	private readonly OfferRepository _offerDbService;
-	private readonly TourRepository _tourDbService;
-	private readonly HotelRepository _hotelDbService;
-	private readonly TransportRepository _transportDbService;
+	private readonly OfferRepository _offerRepository;
+	private readonly TourRepository _tourRepository;
+	private readonly HotelRepository _hotelRepository;
+	private readonly TransportRepository _transportRepository;
 	private readonly IMapper _mapper;
 
 	public OfferService(
-		OfferRepository offerDbService,
-		TourRepository tourDbService,
-		HotelRepository hotelDbService,
-		TransportRepository transportDbService,
+		OfferRepository offerRepository,
+		TourRepository tourRepository,
+		HotelRepository hotelRepository,
+		TransportRepository transportRepository,
 		IMapper mapper
 	)
 	{
-		_offerDbService = offerDbService;
-		_tourDbService = tourDbService;
-		_hotelDbService = hotelDbService;
-		_transportDbService = transportDbService;
+		_offerRepository = offerRepository;
+		_tourRepository = tourRepository;
+		_hotelRepository = hotelRepository;
+		_transportRepository = transportRepository;
 		_mapper = mapper;
 	}
 
 	public async Task<OfferReservationResponse> MakeOfferAsync(OfferRequest offerRequest)
 	{
-		var offer = _mapper.Map<OfferEntity>(offerRequest);
-
-		var tour = await _tourDbService.GetTourAsync(offer.TourId);
+		var tour = await _tourRepository.GetTourAsync(offerRequest.TourId);
 		if (tour == null)
 		{
 			return null;
 		}
-		
+		var offerAvailabilityResponse = await IsOfferAvailableAsync(offerRequest);
+		var offer = _mapper.Map<OfferEntity>(offerRequest);
 		offer.Reservation.ReservationStatus = ReservationStatus.Created;
 		offer.Reservation.StartDate = tour.StartDate;
 		offer.Reservation.EndDate = tour.EndDate;
-		var isOfferAvailable = await IsOfferAvailableAsync(offerRequest);
 		var id = "";
-		if (isOfferAvailable.IsAvailable)
+		if (offerAvailabilityResponse.IsAvailable)
 		{
-			id = await _offerDbService.CreateAsync(offer);
+			id = await _offerRepository.CreateAsync(offer);
 		}
 
 		var response = new OfferReservationResponse
 		{
 			OfferId = id,
-			Price = isOfferAvailable.Price,
-			IsReserved = isOfferAvailable.IsAvailable
+			Price = offerAvailabilityResponse.Price,
+			IsReserved = offerAvailabilityResponse.IsAvailable
 		};
 
-		return response; //TODO type
+		return response;
 	}
 
 	public async Task<OfferAvailabilityResponse> IsOfferAvailableAsync(OfferRequest offerRequest)
@@ -65,29 +63,39 @@ public class OfferService
 		var offer = _mapper.Map<OfferEntity>(offerRequest);
 
 
-		var tour = await _tourDbService.GetTourAsync(offer.TourId);
+		var tour = await _tourRepository.GetTourAsync(offer.TourId);
 		if (tour == null)
 		{
 			return null;
 		}
 
+		var departureCity = offerRequest.TransportationTo.Departure;
+		var arrivalCity = tour.City;
 
-		var transportationToId = offerRequest.StartTransportId;
-		var transportTo = await _transportDbService.GetTransport(transportationToId);
+		var transportTo = await _transportRepository.GetSingleAsync(
+			departureCity,
+			arrivalCity,
+			offerRequest.TransportationTo.Type
+		);
 		if (transportTo == null)
 		{
 			return null;
 		}
+		offerRequest.StartTransportId = transportTo.Id;
 
-		var transportationFromId = offerRequest.EndTransportId;
-		var transportFrom = await _transportDbService.GetTransport(transportationFromId);
+		var transportFrom = await _transportRepository.GetSingleAsync(
+			arrivalCity,
+			departureCity,
+			offerRequest.TransportationFrom.Type
+		);
 		if (transportFrom == null)
 		{
 			return null;
 		}
+		offerRequest.EndTransportId = transportFrom.Id;
 
 		var hotelId = offerRequest.Accommodation.HotelId;
-		var hotel = await _hotelDbService.GetHotel(hotelId);
+		var hotel = await _hotelRepository.GetHotel(hotelId);
 		if (hotel == null)
 		{
 			return null;
@@ -95,7 +103,7 @@ public class OfferService
 
 		var isAvailable = true;
 		
-		var offersAccommodation = await _offerDbService.GetActiveOffersByAccommodation(
+		var offersAccommodation = await _offerRepository.GetActiveOffersByAccommodation(
 			tour.StartDate,
 			tour.EndDate,
 			hotelId
@@ -103,32 +111,39 @@ public class OfferService
 		var isAccommodationAvailable = IsAccommodationAvailable(hotel, offer, offersAccommodation);
 		isAvailable &= isAccommodationAvailable;
 
-		var offersTransportTo = await _offerDbService.GetActiveOffersByStartTransport(
+		var offersTransportTo = await _offerRepository.GetActiveOffersByStartTransport(
 			tour.StartDate,
-			transportationToId
+			offerRequest.StartTransportId
 		);
 		var isTransportationFromAvailable = IsTransportAvailable(transportTo, offer, offersTransportTo);
 		isAvailable &= isTransportationFromAvailable;
-		var offersTransportFrom = await _offerDbService.GetActiveOffersByEndTransport(
+		var offersTransportFrom = await _offerRepository.GetActiveOffersByEndTransport(
 			tour.EndDate,
-			transportationFromId
+			offerRequest.EndTransportId
 		);
 
 		var isTransportationToAvailable = IsTransportAvailable(transportFrom, offer, offersTransportFrom);
 		isAvailable &= isTransportationToAvailable;
 
 
-		decimal price = tour.Price * offer.GetTicketsCount() + offerRequest.Accommodation.NumberOfMeals * 20;
-		if (offerRequest.PromoCode == "OFF10")
-		{
-			price *= 0.9M;
-		}
+		var price = CalculatePrice(offerRequest, tour, offer);
 
 		return new OfferAvailabilityResponse
 		{
 			IsAvailable = isAvailable,
 			Price = price
 		};
+	}
+
+	private static decimal CalculatePrice(OfferRequest offerRequest, TourEntity tour, OfferEntity offer)
+	{
+		decimal price = tour.Price * offer.GetTicketsCount() + offerRequest.Accommodation.NumberOfMeals * 20;
+		if (offerRequest.PromoCode == "OFF10")
+		{
+			price *= 0.9M;
+		}
+
+		return price;
 	}
 
 	private bool IsAccommodationAvailable(
@@ -198,7 +213,7 @@ public class OfferService
 
 	public async Task<List<TourEntity>> SearchToursAsync(string departure, string arrival, DateTime departureDate)
 	{
-		var tours = await _tourDbService.GetAsync(
+		var tours = await _tourRepository.GetAsync(
 			departure,
 			arrival,
 			departureDate
@@ -208,13 +223,13 @@ public class OfferService
 
 	public async Task<List<HotelEntity>> GetHotelsAsync(string place)
 	{
-		var hotels = await _hotelDbService.GetAsync(null, null, place);
+		var hotels = await _hotelRepository.GetAsync(null, null, place);
 		return hotels;
 	}
 
 	public async Task<List<string>> GetDeparturesAsync()
 	{
-		var transports = await _transportDbService.GetAsync(null, null, null, null);
+		var transports = await _transportRepository.GetAsync(null, null, null, null);
 		var departures = transports
 			.Where(x => !string.IsNullOrWhiteSpace(x.Departure))
 			.GroupBy(x => x.Departure)
