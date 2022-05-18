@@ -9,23 +9,23 @@ namespace Pg.Rsww.RedTeam.OfferService.Application.Services;
 
 public class LoaderService
 {
-	private readonly TourRepository _tourDbService;
-	private readonly HotelRepository _hotelDbService;
-	private readonly TransportRepository _transportDbService;
+	private readonly TourRepository _tourRepository;
+	private readonly HotelRepository _hotelRepository;
+	private readonly TransportRepository _transportRepository;
 	private readonly IMapper _mapper;
 
 	private readonly TourOperatorClient _client;
 
 	public LoaderService(
-		TourRepository tourDbService,
-		HotelRepository hotelDbService,
-		TransportRepository transportDbService,
+		TourRepository tourRepository,
+		HotelRepository hotelRepository,
+		TransportRepository transportRepository,
 		IMapper mapper, TourOperatorClient client
 	)
 	{
-		_tourDbService = tourDbService;
-		_hotelDbService = hotelDbService;
-		_transportDbService = transportDbService;
+		_tourRepository = tourRepository;
+		_hotelRepository = hotelRepository;
+		_transportRepository = transportRepository;
 		_mapper = mapper;
 		_client = client;
 	}
@@ -37,18 +37,38 @@ public class LoaderService
 
 	public async Task<bool> FullLoadAsync(bool overrideData)
 	{
-		var hotelsResponse = await _client.GetAsync<List<HotelResponse>>("Hotels");
-		var transportsResponse =
-			await _client.GetAsync<List<TransportResponse>>("Transports");
-		var toursResponses =
-			await _client.GetAsync<List<TourResponse>>("Tours");
+		var existingHotelCount = await _hotelRepository.GetCountAsync();
+		var existingTransportCount = await _transportRepository.GetCountAsync();
+		var existingTourCount = await _tourRepository.GetCountAsync();
+
+		List<HotelResponse> hotelsResponse = null;
+		List<TransportResponse> transportsResponse = null;
+		List<TourResponse> toursResponses = null;
+
+		if (overrideData || existingHotelCount == 0)
+		{
+			hotelsResponse = await _client.GetAsync<List<HotelResponse>>("Hotels");
+		}
+
+		if (overrideData || existingTransportCount == 0)
+		{
+			transportsResponse =
+				await _client.GetAsync<List<TransportResponse>>("Transports");
+		}
+
+		if (overrideData || existingTourCount == 0)
+		{
+			toursResponses =
+				await _client.GetAsync<List<TourResponse>>("Tours");
+		}
+
 
 		var areAllLoaded = true;
 		if (hotelsResponse != null)
 		{
 			var hotels = _mapper.Map<List<HotelEntity>>(hotelsResponse).Distinct().ToList();
 
-			await InsertAsync(overrideData, hotels, _hotelDbService);
+			await InsertAsync(overrideData, hotels, _hotelRepository);
 		}
 		else
 		{
@@ -58,8 +78,8 @@ public class LoaderService
 		if (transportsResponse != null)
 		{
 			var transports = _mapper.Map<List<TransportEntity>>(transportsResponse).Distinct().ToList();
-			
-			await InsertAsync(overrideData, transports, _transportDbService);
+
+			await InsertAsync(overrideData, transports, _transportRepository);
 		}
 		else
 		{
@@ -70,19 +90,19 @@ public class LoaderService
 		{
 			var tours = _mapper.Map<List<TourEntity>>(toursResponses);
 			var distinctTours = tours.Distinct().ToList();
-			
-			await InsertAsync(overrideData, distinctTours, _tourDbService);
+
+			await InsertAsync(overrideData, distinctTours, _tourRepository);
 		}
 		else
 		{
 			areAllLoaded = false;
 		}
 
-		return areAllLoaded;
+		return areAllLoaded || !overrideData;
 	}
 
 
-	private async Task InsertAsync<T>(bool overrideData, IList<T> elements,MongoBaseRepository<T> repository)
+	private async Task InsertAsync<T>(bool overrideData, IList<T> elements, MongoBaseRepository<T> repository)
 	{
 		var isEmpty = true;
 		if (!overrideData)
