@@ -13,6 +13,10 @@ public class TourEntity : IEquatable<TourEntity>
 
 	public string Arrival { get; set; } = null!;
 
+	public string City { get; set; } = null!;
+
+	public string Country { get; set; } = null!;
+
 	public DateTime StartDate { get; set; }
 
 	public DateTime EndDate { get; set; }
@@ -25,8 +29,7 @@ public class TourEntity : IEquatable<TourEntity>
 	{
 		if (ReferenceEquals(null, other)) return false;
 		if (ReferenceEquals(this, other)) return true;
-		return Id == other.Id && Title == other.Title && Arrival == other.Arrival &&
-		       StartDate.Equals(other.StartDate) && EndDate.Equals(other.EndDate) && Price == other.Price;
+		return Id == other.Id && Title == other.Title && Arrival == other.Arrival && City == other.City && Country == other.Country && StartDate.Equals(other.StartDate) && EndDate.Equals(other.EndDate) && Price == other.Price;
 	}
 
 	public override bool Equals(object? obj)
@@ -39,7 +42,7 @@ public class TourEntity : IEquatable<TourEntity>
 
 	public override int GetHashCode()
 	{
-		return HashCode.Combine(Id, Title, Arrival, StartDate, EndDate, Price);
+		return HashCode.Combine(Id, Title, Arrival, City, Country, StartDate, EndDate, Price);
 	}
 
 	public static bool operator ==(TourEntity? left, TourEntity? right)
