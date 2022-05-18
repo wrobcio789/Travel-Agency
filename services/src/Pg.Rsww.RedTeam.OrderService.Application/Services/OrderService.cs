@@ -28,15 +28,14 @@ public class OrderService
 		_logger = logger;
 	}
 
-	public async Task<OrderResponse> ProcessOrder(OfferRequest offer)
+	public async Task<OrderResponse> ProcessOrder(OfferRequest offer, string customerId)
 	{
 		var reservation = MakeReservation(offer);
 		if (reservation is not { IsReserved: true })
 		{
 			return null;
 		}
-
-		var customerId = "JWT"; //TODO
+		
 		var orderId = await _orderDbService.CreateAsync(reservation.OfferId, customerId);
 
 
