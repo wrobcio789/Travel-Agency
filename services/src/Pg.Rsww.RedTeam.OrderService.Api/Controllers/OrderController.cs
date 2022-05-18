@@ -1,6 +1,7 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Pg.Rsww.RedTeam.Common.Models.Offer;
+using Pg.Rsww.RedTeam.Common.Models.Offer.Request;
 using Pg.Rsww.RedTeam.OrderService.Api.Middleware;
 using Pg.Rsww.RedTeam.OrderService.Api.Models;
 using OrderResponse = Pg.Rsww.RedTeam.OrderService.Api.Models.OrderResponse;
@@ -30,8 +31,9 @@ public class OrderController : Controller
 
 
 	[HttpPost("Make")]
-	public async Task<OrderResponse> PostMakeOrder([FromBody] OfferRequest offerRequest)
+	public async Task<OrderResponse> PostMakeOrder([FromBody] SimpleOfferRequest simpleOfferRequest)
 	{
+		var offerRequest = _mapper.Map<OfferRequest>(simpleOfferRequest);
 		var customerId = (string)HttpContext.Items["CustomerId"];
 		if (customerId == null)
 		{
