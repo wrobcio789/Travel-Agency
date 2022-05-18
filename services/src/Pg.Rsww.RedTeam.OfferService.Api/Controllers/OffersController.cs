@@ -1,6 +1,7 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Pg.Rsww.RedTeam.Common.Models.Offer;
+using Pg.Rsww.RedTeam.Common.Models.Offer.Request;
 using Pg.Rsww.RedTeam.OfferService.Api.Models;
 using Pg.Rsww.RedTeam.OfferService.Application.Models;
 
@@ -37,8 +38,9 @@ public class OffersController : Controller
 	}
 
 	[HttpPost("Availability")]
-	public async Task<OfferAvailabilityResponse> PostAvailability([FromBody] OfferRequest offerRequest)
+	public async Task<OfferAvailabilityResponse> PostAvailability([FromBody] SimpleOfferRequest simpleOfferRequest)
 	{
+		var offerRequest = _mapper.Map<OfferRequest>(simpleOfferRequest);
 		var result = await _offerService.IsOfferAvailableAsync(offerRequest);
 		return result;
 	}
