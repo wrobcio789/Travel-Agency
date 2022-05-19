@@ -128,7 +128,7 @@ const placesOfDeparture = [
 
 const transportationTypes = [
     {code: "BUS", label: "bus"},
-    {code: "PLAIN", label: "plain"},
+    {code: "PLANE", label: "plane"},
     {code: "TRAIN", label: "train"},
 ]
 

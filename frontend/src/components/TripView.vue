@@ -69,12 +69,12 @@ export default {
                     toddlers: 0,
                 },
                 transporationFrom: {
-                    departure: "GÓWNO",
-                    type: "PLAIN",
+                    departure: null,
+                    type: "PLANE",
                 },
                 transportationTo: {
                     departure: null,
-                    type: "PLAIN",
+                    type: "PLANE",
                 },
                 accommodation: {
                     hotelId: null,
@@ -96,7 +96,7 @@ export default {
         };
     },
     created() {
-        this.offerRequest.tourId = this.trip.tourId;
+        this.offerRequest.tourId = this.trip.id;
         this.offerRequest.transportationTo.departure = this.trip.arrival;
         this.setHotels();
     },
