@@ -1,6 +1,4 @@
 #TODO: Replace spring.datasource.* after contenerization
-server:
-  port: 9099
 spring:
   jpa:
     hibernate:
