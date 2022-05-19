@@ -4,9 +4,9 @@
             <div class="searcher flex-1 flex-column">
                 <b class="group-label">Transport to {{trip.arrival}}</b> 
                 <v-select :options="placesOfDepartures" v-model="offerRequest.transportationTo.departure"></v-select>
-                <!-- <v-select :options="transportationTypes" v-model="offerRequest.transportationTo.type" :reduce="type => type.type" :label="'label'"></v-select> -->
+                <v-select :options="transportationTypes" v-model="offerRequest.transportationTo.type" :reduce="type => type.code" label="label"></v-select>
                 <b class="group-label">Transport from {{trip.arrival}} </b> 
-                <!-- <v-select :options="transportationTypes" v-model="offerRequest.transportationFrom.type" :reduce="type => type.type" :label="'label'"></v-select> -->
+                <v-select :options="transportationTypes" v-model="offerRequest.transportationFrom.type" :reduce="type => type.code" label="label"></v-select>
                 <b class="group-label">Participants</b>
                 <span>Number of adults</span> 
                 <vue-numeric-input  v-model="offerRequest.people.adults" :min="1" :max="10" :step="1"></vue-numeric-input>
@@ -68,7 +68,7 @@ export default {
                     children: 0,
                     toddlers: 0,
                 },
-                transporationFrom: {
+                transportationFrom: {
                     departure: null,
                     type: "PLANE",
                 },
