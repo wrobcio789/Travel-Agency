@@ -6,10 +6,21 @@ import VueResource from 'vue-resource';
 
 import Login from './components/Login'
 import OffersView from './components/OffersView'
+import TripView from './components/TripView'
+import vSelect from 'vue-select'
+
+import 'vue-select/dist/vue-select.css';
+import VueNumericInput from 'vue-numeric-input';
+import Datepicker from 'vuejs-datepicker';
 
 Vue.use(Vuex);
 Vue.use(VueResource);
 Vue.use(VueRouter);
+
+Vue.component('v-select', vSelect)
+Vue.component('datepicker', Datepicker)
+
+Vue.use(VueNumericInput)
 
 const store = new Vuex.Store({
   state: {
@@ -37,15 +48,21 @@ const store = new Vuex.Store({
 });
 
 const routes = [
+  // {
+  //   path: "/",
+  //   name: "login",
+  //   component: Login
+  // },
   {
     path: "/",
-    name: "login",
-    component: Login
-  },
-  {
-    path: "/offers",
     name: "offers",
     component: OffersView
+  },
+  {
+    path: "/trip",
+    name: "trip",
+    props: true,
+    component: TripView,
   }
 ]
 
@@ -55,5 +72,6 @@ new Vue({
   el: '#app',
   render: h => h(App),
   store,
+
   router
 })
