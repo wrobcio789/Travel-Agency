@@ -28,15 +28,15 @@ const store = new Vuex.Store({
     authToken: "",
   },
   mutations: {
-    clearCredentials(state, user, token) {
+    clearCredentials(state) {
       state.user = null;
       state.authToken = "";
       Vue.http.headers.common['Authorization'] = null;
     },
-    setCredentials(state, user, token){
-      state.user = user;
-      state.authToken = token;
-      Vue.http.headers.common['Authorization'] = 'Bearer ' + token;
+    setCredentials(state, data){
+      state.user = data.username;
+      state.authToken = data.token;
+      Vue.http.headers.common['Authorization'] = 'Bearer ' + state.authToken;
     },
   },
   getters: {
