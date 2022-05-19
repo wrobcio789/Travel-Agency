@@ -69,8 +69,7 @@ public class OrderService
 			}
 		};
 		var message = JsonConvert.SerializeObject(paymentObj);
-		// var paymentId = _rpcClientService.Call(message, paymentQueueName);
-		var paymentId = "payId";
+		var paymentId = _rpcClientService.Call(message, paymentQueueName);
 		return paymentId;
 	}
 
