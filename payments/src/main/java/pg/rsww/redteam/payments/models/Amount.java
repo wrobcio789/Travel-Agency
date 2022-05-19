@@ -10,6 +10,6 @@ import java.math.BigDecimal;
 @Embeddable
 public class Amount {
     @Column(columnDefinition = "DECIMAL(7,2)")
-    private BigDecimal amount;
+    private BigDecimal value;
     private String currency;
 }
