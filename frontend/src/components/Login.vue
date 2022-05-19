@@ -26,7 +26,7 @@ export default {
         login() {
             this.$http.post('/api/customers/login', this.userData)
             .then(res => {
-                this.$store.commit('setCredentials', this.userData.username, res.body);
+                this.$store.commit('setCredentials', {username: this.userData.username, token: res.bodyText});
                 this.isError = false;
 
                 this.$router.push({path: "/offers"});
