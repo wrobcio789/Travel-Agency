@@ -50,30 +50,17 @@ export default {
                     toddlers: 0,
                 }
             },
-            trips: [{
-                    id: 1,
-                    title: "Twoja stara          wycieczka",
-                    arrival: "Majorca",
-                    startDate: new Date(),
-                    endDate: new Date()
-                }, {
-                    id: 2,
-                    title: "Twoja stara          wycieczka",
-                    arrival: "Majorca",
-                    startDate: new Date(),
-                    endDate: new Date()
-                }, {
-                    id: 3,
-                    title: "Twoja stara          wycieczka",
-                    arrival: "Majorca",
-                    startDate: new Date(),
-                    endDate: new Date()
-                }]
+            trips: []
         };
     },
     methods: {
         onFilterChange() {
             console.log(this.filter);
+
+            this.$http.post('/api/offers/search', this.filter)
+            .then(res => {
+                this.trips = res;
+            });
         },
         formatDate(date) {
             return moment(date).format("DD MM YYYY, h:mm:ss");
@@ -81,6 +68,9 @@ export default {
         open(trip) {
             this.$router.push({ name: "trip", params: { trip: trip } });
         }
+    },
+    created() {
+        this.onFilterChange();
     },
     components: { TripView }
 }

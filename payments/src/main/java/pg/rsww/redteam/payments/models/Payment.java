@@ -9,7 +9,6 @@ import javax.persistence.*;
 @Table(name="payments")
 public class Payment {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private String id;
     @Column(nullable = false)
     private String orderId;

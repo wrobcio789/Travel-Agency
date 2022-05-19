@@ -1,4 +1,6 @@
 #TODO: Replace spring.datasource.* after contenerization
+server:
+  port: 9099
 spring:
   jpa:
     hibernate:
@@ -14,3 +16,8 @@ spring:
     url: jdbc:postgresql://localhost:16832/payments_mcsv
     username: postgres
     password: root
+  rabbitmq:
+    host: localhost
+    port: 5672
+    password: guest
+    username: guest

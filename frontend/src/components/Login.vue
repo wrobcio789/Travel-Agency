@@ -24,7 +24,7 @@ export default {
     },
     methods: {
         login() {
-            this.$http.post('/api/login', this.userData)
+            this.$http.post('/api/customers/login', this.userData)
             .then(res => {
                 this.$store.commit('setCredentials', this.userData.username, res.body);
                 this.isError = false;

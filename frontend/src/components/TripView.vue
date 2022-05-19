@@ -98,35 +98,42 @@ export default {
     created() {
         this.offerRequest.tourId = this.trip.tourId;
         this.offerRequest.transportationTo.departure = this.trip.arrival;
-        this.hotels = this.getHotels();
+        this.setHotels();
     },
     methods: {
         checkAvailability() {
-            this.isAvailable = true;
+            this.$http.post('/api/offers/availability', this.offerRequest)
+            .then(res => {
+                this.isAvailable = res.body.isAvailable;
+            });
         },
         formatDate(date) {
             return moment(date).format('DD MM YYYY, h:mm:ss');
         },
-        getHotels() {
-            return [
-                {id: "1",
-                name: "Hotel 1"},
-                {id: "2",
-                name: "Hotel 2"},
-            ]
+        setHotels() {
+            this.$http.get('/api/offers/hotels', {params: {place: this.trip.arrival}})
+            .then(res => {
+                this.hotels = res.body;
+            });
         },
         buyTrip() {
-            this.order = {
-                orderId: "1",
-                paymentId: "1",
-                price: 10.30,
-            }
+            this.$http.post('/api/orders/make', this.offerRequest)
+            .then(res => {
+                this.order = res.body;
+            });
         },
         payForOrder() {
-            this.creditCardData = {};
+            this.$http.post('/api/payments/pay', {paymentId: this.order.paymentId, cardData: this.creditCardData})
+            .then(res => {
+                this.order.isFinalized = true;
+                this.order.paymentError = false;
+            })
+            .catch(erro => {
+                this.order.isFinalized = false;
+                this.order.paymentError = true;
+            });
 
-            this.order.paymentError = true;
-            //this.order.isFinalized = true;
+            this.creditCardData = {};
         }
     },
     props: {
