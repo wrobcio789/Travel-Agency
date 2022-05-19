@@ -31,10 +31,12 @@ const store = new Vuex.Store({
     clearCredentials(state, user, token) {
       state.user = null;
       state.authToken = "";
+      Vue.http.headers.common['Authorization'] = null;
     },
     setCredentials(state, user, token){
       state.user = user;
       state.authToken = token;
+      Vue.http.headers.common['Authorization'] = 'Bearer ' + token;
     },
   },
   getters: {

@@ -59,7 +59,7 @@ export default {
 
             this.$http.post('/api/offers/search', this.filter)
             .then(res => {
-                this.trips = res;
+                this.trips = res.body;
             });
         },
         formatDate(date) {
