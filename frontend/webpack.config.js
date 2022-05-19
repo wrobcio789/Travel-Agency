@@ -50,15 +50,31 @@ module.exports = {
     noInfo: true,
     overlay: true,
     proxy: {
-      '/api' : {
-        target: 'http://localhost:8080',
+      '/api/payments' : {
+        target: 'http://localhost:8081',
+        changeOrigin: true,
+        secure: false
+      },
+      '/api/customers' : {
+        target: 'http://localhost:8082',
+        changeOrigin: true,
+        secure: false
+      },
+      '/api/offers' : {
+        target: 'http://localhost:8083',
+        changeOrigin: true,
+        secure: false
+      },
+      '/api/orders' : {
+        target: 'http://localhost:8084',
         changeOrigin: true,
         secure: false
       }
     },
     headers: {
       "Access-Control-Allow-Origin": "*",
-    }
+    },
+    port: 8080
   },
   performance: {
     hints: false
@@ -67,6 +83,8 @@ module.exports = {
 }
 
 if (process.env.NODE_ENV === 'production') {
+  const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+
   module.exports.devtool = '#source-map'
   // http://vue-loader.vuejs.org/en/workflow/production.html
   module.exports.plugins = (module.exports.plugins || []).concat([
@@ -75,11 +93,14 @@ if (process.env.NODE_ENV === 'production') {
         NODE_ENV: '"production"'
       }
     }),
-    new webpack.optimize.UglifyJsPlugin({
-      sourceMap: true,
-      compress: {
-        warnings: false
-      }
+    new UglifyJsPlugin({
+      "uglifyOptions":
+          {
+              compress: {
+                  warnings: false
+              },
+              sourceMap: true
+          }
     }),
     new webpack.LoaderOptionsPlugin({
       minimize: true

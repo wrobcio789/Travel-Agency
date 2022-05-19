@@ -35,7 +35,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         final String path = request.getRequestURI();
-        return "/api/login".equals(path);
+        return "/api/customers/login".equals(path);
     }
 
     @Override

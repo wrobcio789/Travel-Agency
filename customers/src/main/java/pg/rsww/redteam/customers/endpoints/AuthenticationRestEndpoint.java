@@ -12,7 +12,7 @@ import pg.rsww.redteam.customers.services.AuthenticationService;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/customers")
 @AllArgsConstructor
 public class AuthenticationRestEndpoint {
 

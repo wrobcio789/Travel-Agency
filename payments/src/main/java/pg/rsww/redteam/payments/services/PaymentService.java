@@ -8,6 +8,9 @@ import pg.rsww.redteam.payments.models.MakePaymentRequest;
 import pg.rsww.redteam.payments.models.PaymentStatus;
 import pg.rsww.redteam.payments.repositories.PaymentForOrderRepository;
 
+import java.util.Optional;
+import java.util.UUID;
+
 @Service
 @AllArgsConstructor
 public class PaymentService {
@@ -24,11 +27,24 @@ public class PaymentService {
     public Payment create(CreatePaymentRequest request) {
         final Payment payment = new Payment();
 
+        payment.setId(UUID.randomUUID().toString());//FIXME: use sequence in payment model
         payment.setStatus(PaymentStatus.CREATED);
         payment.setAmount(request.getAmount());
         payment.setOrderId(request.getOrderId());
 
         return paymentRepository.saveAndFlush(payment);
+    }
+
+    public Payment cancel(String orderId) {
+        final Optional<Payment> paymentOptional = paymentRepository.findByOrderId(orderId);
+        if(paymentOptional.isPresent()){
+            final Payment payment = paymentOptional.get();
+            payment.setStatus(PaymentStatus.CANCELED);
+
+            return paymentRepository.saveAndFlush(payment);
+        }
+
+        return null;
     }
 
     private void validatePayment(Payment payment) throws InvalidPaymentException {

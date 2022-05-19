@@ -1,6 +1,8 @@
 package pg.rsww.redteam.customers.models;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,6 +16,8 @@ import java.util.Collections;
 @Data
 @Entity
 @Table(name="users")
+@NoArgsConstructor
+@AllArgsConstructor
 public class AppUser implements UserDetails {
     @Id
     private String username;

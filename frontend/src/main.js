@@ -48,13 +48,13 @@ const store = new Vuex.Store({
 });
 
 const routes = [
-  // {
-  //   path: "/",
-  //   name: "login",
-  //   component: Login
-  // },
   {
     path: "/",
+    name: "login",
+    component: Login
+  },
+  {
+    path: "/offers",
     name: "offers",
     component: OffersView
   },
