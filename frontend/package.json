@@ -1,5 +1,5 @@
 {
-  "name": "PG Travel",
+  "name": "pg-travel",
   "description": "Vue.js fronted application for travel agency",
   "version": "1.0.0",
   "author": "Maciej Wróblewski",
@@ -12,8 +12,11 @@
   "dependencies": {
     "moment": "^2.29.1",
     "vue": "^2.5.11",
+    "vue-numeric-input": "^2.0.0",
     "vue-resource": "^1.5.3",
     "vue-router": "^3.5.3",
+    "vue-select": "^3.18.3",
+    "vuejs-datepicker": "^1.6.2",
     "vuex": "^3.6.2"
   },
   "browserslist": [
