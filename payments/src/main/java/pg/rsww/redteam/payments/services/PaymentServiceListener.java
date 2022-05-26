@@ -3,6 +3,7 @@ package pg.rsww.redteam.payments.services;
 import lombok.AllArgsConstructor;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
+import java.util.List;
 import pg.rsww.redteam.payments.configuration.RabbitQueueConfiguration;
 import pg.rsww.redteam.payments.models.CreatePaymentRequest;
 import pg.rsww.redteam.payments.models.Payment;
@@ -13,8 +14,10 @@ public class PaymentServiceListener {
     private final PaymentService paymentService;
 
     @RabbitListener(queues = RabbitQueueConfiguration.CANCEL_RESERVATION_QUEUE)
-    public void listenOnReservationCancel(String orderId) {
-        paymentService.cancel(orderId);
+    public void listenOnReservationCancel(List<String> orderIds) {
+        for (String orderId : orderIds) {
+            paymentService.cancel(orderId);
+        }
     }
 
     @RabbitListener(queues = RabbitQueueConfiguration.CREATE_PAYMENT_QUEUE)
