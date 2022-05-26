@@ -14,8 +14,8 @@ public class OfferEntity
 
 	public Reservation Reservation { get; set; } = null!;
 
-	public People Participants { get; set; } = null!;
+	public People People { get; set; } = null!;
 
 	public int GetTicketsCount() =>
-		Participants.Adults + Participants.Teenagers + Participants.Children + Participants.Toddlers;
+		People.Adults + People.Teenagers + People.Children + People.Toddlers;
 }

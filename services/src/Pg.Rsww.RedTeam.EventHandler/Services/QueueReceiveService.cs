@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Pg.Rsww.RedTeam.EventHandler.Commands;
 using Pg.Rsww.RedTeam.EventHandler.Settings;
@@ -9,14 +10,17 @@ namespace Pg.Rsww.RedTeam.EventHandler.Services;
 public class QueueReceiveService : BackgroundService
 {
 	private readonly IEnumerable<IQueueCommand> _commands;
+	private readonly ILogger<QueueReceiveService> _logger;
 	private readonly RabbitMQSettings _rabbitMqSettings;
 
 	public QueueReceiveService(
 		IEnumerable<IQueueCommand> commands,
-		IOptions<RabbitMQSettings> rabbitMqSettings
+		IOptions<RabbitMQSettings> rabbitMqSettings,
+		ILogger<QueueReceiveService> logger
 	)
 	{
 		_commands = commands;
+		_logger = logger;
 		_rabbitMqSettings = rabbitMqSettings.Value;
 	}
 
@@ -30,7 +34,7 @@ public class QueueReceiveService : BackgroundService
 		var tasks = new List<Task>();
 		foreach (var action in _commands)
 		{
-			var consumer = new QueueWorker(_rabbitMqSettings, action.QueueName, action.Command);
+			var consumer = new QueueWorker(_rabbitMqSettings, action.QueueName, action.Command, _logger);
 			consumers.Add(consumer);
 			tasks.Add(consumer.StartAsync(stoppingToken));
 		}

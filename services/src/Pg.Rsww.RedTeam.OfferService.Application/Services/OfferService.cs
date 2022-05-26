@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.Extensions.Logging;
 using Pg.Rsww.RedTeam.Common.Models;
 using Pg.Rsww.RedTeam.Common.Models.Offer;
 using Pg.Rsww.RedTeam.OfferService.Application.Models;
@@ -14,13 +15,15 @@ public class OfferService
 	private readonly HotelRepository _hotelRepository;
 	private readonly TransportRepository _transportRepository;
 	private readonly IMapper _mapper;
+	private readonly ILogger<OfferService> _logger;
 
 	public OfferService(
 		OfferRepository offerRepository,
 		TourRepository tourRepository,
 		HotelRepository hotelRepository,
 		TransportRepository transportRepository,
-		IMapper mapper
+		IMapper mapper,
+		ILogger<OfferService> logger
 	)
 	{
 		_offerRepository = offerRepository;
@@ -28,6 +31,7 @@ public class OfferService
 		_hotelRepository = hotelRepository;
 		_transportRepository = transportRepository;
 		_mapper = mapper;
+		_logger = logger;
 	}
 
 	public async Task<OfferReservationResponse> MakeOfferAsync(OfferRequest offerRequest)
@@ -35,8 +39,10 @@ public class OfferService
 		var tour = await _tourRepository.GetTourAsync(offerRequest.TourId);
 		if (tour == null)
 		{
+			_logger.Log(LogLevel.Warning, $"Tour could not be found, id:{offerRequest.TourId}");
 			return null;
 		}
+
 		var offerAvailabilityResponse = await IsOfferAvailableAsync(offerRequest);
 		var offer = _mapper.Map<OfferEntity>(offerRequest);
 		offer.Reservation.ReservationStatus = ReservationStatus.Created;
@@ -46,6 +52,7 @@ public class OfferService
 		if (offerAvailabilityResponse.IsAvailable)
 		{
 			id = await _offerRepository.CreateAsync(offer);
+			_logger.Log(LogLevel.Information, $"Offer is available id:{id}");
 		}
 
 		var response = new OfferReservationResponse
@@ -61,11 +68,16 @@ public class OfferService
 	public async Task<OfferAvailabilityResponse> IsOfferAvailableAsync(OfferRequest offerRequest)
 	{
 		var offer = _mapper.Map<OfferEntity>(offerRequest);
-
+		if (offer == null)
+		{
+			_logger.Log(LogLevel.Error,"Could not map offer request to offer");
+			return null;
+		}
 
 		var tour = await _tourRepository.GetTourAsync(offer.TourId);
 		if (tour == null)
 		{
+			_logger.Log(LogLevel.Warning, $"Tour could not be found, id:{offerRequest.TourId}");
 			return null;
 		}
 
@@ -79,8 +91,10 @@ public class OfferService
 		);
 		if (transportTo == null)
 		{
+			_logger.Log(LogLevel.Warning, "TransportTo could not be found");
 			return null;
 		}
+
 		offerRequest.StartTransportId = transportTo.Id;
 
 		var transportFrom = await _transportRepository.GetSingleAsync(
@@ -90,25 +104,29 @@ public class OfferService
 		);
 		if (transportFrom == null)
 		{
+			_logger.Log(LogLevel.Warning, "TransportFrom could not be found");
 			return null;
 		}
+
 		offerRequest.EndTransportId = transportFrom.Id;
 
 		var hotelId = offerRequest.Accommodation.HotelId;
 		var hotel = await _hotelRepository.GetHotel(hotelId);
 		if (hotel == null)
 		{
+			_logger.Log(LogLevel.Warning, "Hotel could not be found, id:{hotelId}", hotelId);
 			return null;
 		}
 
 		var isAvailable = true;
-		
+
 		var offersAccommodation = await _offerRepository.GetActiveOffersByAccommodation(
 			tour.StartDate,
 			tour.EndDate,
 			hotelId
 		);
 		var isAccommodationAvailable = IsAccommodationAvailable(hotel, offer, offersAccommodation);
+		if (!isAccommodationAvailable) _logger.Log(LogLevel.Information, "Accommodation is not available");
 		isAvailable &= isAccommodationAvailable;
 
 		var offersTransportTo = await _offerRepository.GetActiveOffersByStartTransport(
@@ -116,6 +134,7 @@ public class OfferService
 			offerRequest.StartTransportId
 		);
 		var isTransportationFromAvailable = IsTransportAvailable(transportTo, offer, offersTransportTo);
+		if (!isTransportationFromAvailable) _logger.Log(LogLevel.Information, "TransportationFrom is not available");
 		isAvailable &= isTransportationFromAvailable;
 		var offersTransportFrom = await _offerRepository.GetActiveOffersByEndTransport(
 			tour.EndDate,
@@ -123,6 +142,7 @@ public class OfferService
 		);
 
 		var isTransportationToAvailable = IsTransportAvailable(transportFrom, offer, offersTransportFrom);
+		if (!isTransportationToAvailable) _logger.Log(LogLevel.Information, "TransportationTo is not available");
 		isAvailable &= isTransportationToAvailable;
 
 

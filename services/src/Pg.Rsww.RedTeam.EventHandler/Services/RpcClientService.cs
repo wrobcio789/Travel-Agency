@@ -20,7 +20,7 @@ public class RpcClientService
 	public RpcClientService(IOptions<RabbitMQSettings> rabbitMQSettings)
 	{
 		_rabbitMqSettings = rabbitMQSettings.Value;
-		var factory = new ConnectionFactory() { HostName = _rabbitMqSettings.HostName };
+		var factory = new ConnectionFactory() { HostName = _rabbitMqSettings.HostName , Port= _rabbitMqSettings.Port, UserName=_rabbitMqSettings.UserName,Password = _rabbitMqSettings.Password};
 
 		connection = factory.CreateConnection();
 		channel = connection.CreateModel();

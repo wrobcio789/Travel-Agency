@@ -45,7 +45,7 @@ public class TourOperatorClient
 		}
 		catch (Exception ex)
 		{
-			_logger.Log(LogLevel.Error,"Could not collect data from tour operator",ex);
+			_logger.Log(LogLevel.Error,"Could not collect data from tour operator {ex}");
 			return default;
 		}
 	}
