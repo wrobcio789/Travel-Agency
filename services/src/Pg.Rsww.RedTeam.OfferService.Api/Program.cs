@@ -27,7 +27,7 @@ app.UseHttpLogging();
 if (app.Environment.IsDevelopment())
 {
 	app.UseSwagger();
-	app.UseSwaggerUI();
+	app.UseSwaggerUI(x => { x.SwaggerEndpoint("/swagger/v1/swagger.yaml", "Offer Service API"); });
 }
 // app.UseHttpsRedirection();
 

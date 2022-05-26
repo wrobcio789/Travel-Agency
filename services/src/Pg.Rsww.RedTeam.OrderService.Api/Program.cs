@@ -31,7 +31,7 @@ app.UseHttpLogging();
 if (app.Environment.IsDevelopment())
 {
 	app.UseSwagger();
-	app.UseSwaggerUI();
+	app.UseSwaggerUI(x => { x.SwaggerEndpoint("/swagger/v1/swagger.yaml", "Order Service API"); });
 }
 // app.UseHttpsRedirection();
 
