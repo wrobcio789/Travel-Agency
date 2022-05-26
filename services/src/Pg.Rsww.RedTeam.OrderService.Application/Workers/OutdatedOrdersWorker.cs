@@ -37,13 +37,15 @@ public class OutdatedOrdersWorker : BackgroundService
 					var reservations = await _orderDbService.CancelOutdatedReservations(maxDateTime);
 					if (reservations.Any())
 					{
-						var jsonBody = JsonConvert.SerializeObject(reservations.Select(x => x.OfferId));
+						var jsonBody = JsonConvert.SerializeObject(reservations.Select(x => x.Id));
 						_sendService.SendMessage(jsonBody, QueueName);
+						jsonBody = JsonConvert.SerializeObject(reservations.Select(x => x.OfferId));
+						_sendService.SendMessage(jsonBody, QueueName+"2");
 					}
 				}
 				catch (Exception ex)
 				{
-					_logger.Log(LogLevel.Error,"Could not cancel old orders",ex);
+					_logger.Log(LogLevel.Error,$"Could not cancel old orders {ex}");
 				}
 
 				var timeToWait = DateTime.Now - start;

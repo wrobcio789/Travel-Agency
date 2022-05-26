@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Pg.Rsww.RedTeam.Common.Models.Offer;
 using Pg.Rsww.RedTeam.EventHandler.Services;
 using Pg.Rsww.RedTeam.OrderService.Application.Models;
@@ -33,6 +34,7 @@ public class OrderService
 		var reservation = MakeReservation(offer);
 		if (reservation is not { IsReserved: true })
 		{
+			_logger.Log(LogLevel.Information, "Reservation is not available");
 			return null;
 		}
 		
@@ -58,7 +60,8 @@ public class OrderService
 
 	private string InitPayment(decimal Price, string orderId)
 	{
-		const string paymentQueueName = "init-payment";
+		_logger.Log(LogLevel.Information, $"Init payment for order {orderId}");
+		const string paymentQueueName = "create-payment";
 		var paymentObj = new InitPaymentRequest
 		{
 			OrderId = orderId,
@@ -68,9 +71,15 @@ public class OrderService
 				Currency = "PLN"
 			}
 		};
-		var message = JsonConvert.SerializeObject(paymentObj);
+		var message = JsonConvert.SerializeObject(paymentObj,
+			Formatting.Indented,
+			new JsonSerializerSettings
+			{
+				ContractResolver = new CamelCasePropertyNamesContractResolver()
+			});
 		var paymentId = _rpcClientService.Call(message, paymentQueueName);
-		return paymentId;
+		_logger.Log(LogLevel.Information, $"Received payment {paymentId} for order {orderId}");
+		return paymentId.Replace("\"", string.Empty);
 	}
 
 	private OfferReservationResponse MakeReservation(OfferRequest offer)

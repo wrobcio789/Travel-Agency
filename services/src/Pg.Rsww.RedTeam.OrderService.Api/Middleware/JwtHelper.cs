@@ -62,7 +62,7 @@ public class JwtHelper
 		}
 		catch (Exception ex)
 		{
-			_logger.Log(LogLevel.Error, $"Token is missing claim {claimName}",ex);
+			_logger.Log(LogLevel.Error, $"Token is missing claim {claimName} {ex}");
 			return null;
 		}
 	}

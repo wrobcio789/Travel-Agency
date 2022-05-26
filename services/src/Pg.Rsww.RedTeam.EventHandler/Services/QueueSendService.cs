@@ -24,12 +24,12 @@ public class QueueSendService
 	{
 		try
 		{
-			var factory = new ConnectionFactory() { HostName = _rabbitMqSettings.HostName };
+			var factory = new ConnectionFactory() { HostName = _rabbitMqSettings.HostName , Port= _rabbitMqSettings.Port, UserName=_rabbitMqSettings.UserName,Password = _rabbitMqSettings.Password};
 			using (var connection = factory.CreateConnection())
 			using (var channel = connection.CreateModel())
 			{
 				channel.QueueDeclare(queue: queue,
-					durable: false,
+					durable: true,
 					exclusive: false,
 					autoDelete: false,
 					arguments: null);
@@ -44,7 +44,7 @@ public class QueueSendService
 		}
 		catch (Exception ex)
 		{
-			_logger.Log(LogLevel.Error,"Could not send message",ex);
+			_logger.Log(LogLevel.Error,$"Could not send message {ex}");
 			return false;
 		}
 

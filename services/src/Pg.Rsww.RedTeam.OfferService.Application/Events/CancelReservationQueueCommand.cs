@@ -15,7 +15,7 @@ public class CancelReservationQueueCommand : IQueueCommand
 	public CancelReservationQueueCommand(OfferRepository offerRepository)
 	{
 		_offerRepository = offerRepository;
-		QueueName = "cancel-reservation";
+		QueueName = "cancel-reservation2";
 		Command = HandleMessage;
 	}
 

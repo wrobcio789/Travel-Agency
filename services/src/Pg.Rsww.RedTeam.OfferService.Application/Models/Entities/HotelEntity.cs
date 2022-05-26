@@ -21,4 +21,7 @@ public class HotelEntity
 	[BsonElement("Rooms")]
 	[JsonPropertyName("Rooms")]
 	public List<RoomEntity> Rooms { get; set; } = null!;
+	[BsonElement("Amenities")]
+	[JsonPropertyName("Amenities")]
+	public List<string> Amenities { get; set; } = null!;
 }

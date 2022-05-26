@@ -10,7 +10,7 @@ public class OfferProfile : Profile
 	{
 		CreateMap<OfferRequest, OfferEntity>()
 			.ForMember(dest => dest.TourId, act => act.MapFrom(src => src.TourId))
-			.ForMember(dest => dest.Participants, act => act.MapFrom(src => src.Participants))
+			.ForMember(dest => dest.People, act => act.MapFrom(src => src.People))
 			.ForPath(dest => dest.Reservation.StartTransport,
 				act => act.MapFrom(src => src.StartTransportId))
 			.ForPath(dest => dest.Reservation.EndTransport,
