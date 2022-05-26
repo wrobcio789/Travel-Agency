@@ -25,7 +25,8 @@ namespace Pg.Rsww.RedTeam.OfferService.Api.Mapping
 
 			CreateMap<HotelEntity, HotelListingResponse>()
 				.ForMember(dest => dest.Id, act => act.MapFrom(src => src.Id))
-				.ForMember(dest => dest.Name, act => act.MapFrom(src => src.Name));
+				.ForMember(dest => dest.Name, act => act.MapFrom(src => src.Name))
+				.ForMember(dest => dest.Amenities, act => act.MapFrom(src => src.Amenities));
 		}
 	}
 }
