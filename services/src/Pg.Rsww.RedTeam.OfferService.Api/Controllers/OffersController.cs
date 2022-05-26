@@ -42,6 +42,14 @@ public class OffersController : Controller
 	{
 		var offerRequest = _mapper.Map<OfferRequest>(simpleOfferRequest);
 		var result = await _offerService.IsOfferAvailableAsync(offerRequest);
+		if (result == null)
+		{
+			return new OfferAvailabilityResponse
+			{
+				IsAvailable = false,
+				Price = 0.00m,
+			};
+		}
 		return result;
 	}
 
