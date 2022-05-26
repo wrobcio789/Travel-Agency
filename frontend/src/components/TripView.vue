@@ -18,6 +18,9 @@
                 <vue-numeric-input  v-model="offerRequest.people.toddlers" :min="0" :max="10" :step="1"></vue-numeric-input>
                 <b class="group-label">Hotel</b>
                 <v-select :options="hotels" v-model="offerRequest.accommodation.hotelId" :reduce="hotel => hotel.id" :label="'name'"></v-select>
+                <span v-if="offerRequest.accommodation.hotelId">Hotel amenities: 
+                    <span v-for="amenity in hotels.find(hotel => hotel.id > offerRequest.accommodation.hotelId)" v-bind:key="amenity">{{amenity}}</span>
+                </span>
                 <span>Number of small rooms</span> 
                 <vue-numeric-input  v-model="offerRequest.accommodation.smallRooms" :min="0" :max="10" :step="1"></vue-numeric-input>
                 <span>Number of medium rooms</span> 
