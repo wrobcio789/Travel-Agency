@@ -3,7 +3,7 @@
         <div class="flex-row">
             <div class="searcher flex-1 flex-column">
                 <span>Destination</span> 
-                <v-select :options="destinations" v-model="filter.destination" @input="onFilterChange"></v-select>
+                <v-select :options="destinations" v-model="filter.arrival" @input="onFilterChange"></v-select>
                 <span>Place of departure</span> 
                 <v-select :options="placesOfDepartures" v-model="filter.placesOfDeparture" @input="onFilterChange"></v-select>
                 <span>Departure date</span> 
@@ -40,7 +40,7 @@ export default {
             destinations: getArrivalPlaces(),
             placesOfDepartures: getDeparturePlaces(),
             filter: {
-                destination: null,
+                arrival: null,
                 placeOfDeparture: null,
                 departureDate: new Date(),
                 people: {

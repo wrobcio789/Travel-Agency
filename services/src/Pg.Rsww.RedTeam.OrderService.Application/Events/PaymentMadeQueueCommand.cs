@@ -25,6 +25,7 @@ public class PaymentMadeQueueCommand : IQueueCommand
 
 	private async Task<bool> HandleMessage(string orderId)
 	{
+		orderId = orderId .Replace("\"", string.Empty);
 		await _orderRepository.UpdateStatus(orderId, ReservationStatus.Completed);
 		var order = await _orderRepository.GetById(orderId);
 		if (order != null)

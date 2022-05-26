@@ -7,6 +7,7 @@ import VueResource from 'vue-resource';
 import Login from './components/Login'
 import OffersView from './components/OffersView'
 import TripView from './components/TripView'
+import OrdersView from './components/OrdersView'
 import vSelect from 'vue-select'
 
 import 'vue-select/dist/vue-select.css';
@@ -65,6 +66,11 @@ const routes = [
     name: "trip",
     props: true,
     component: TripView,
+  },
+  {
+    path: "/orders",
+    name: "orders",
+    component: OrdersView,
   }
 ]
 

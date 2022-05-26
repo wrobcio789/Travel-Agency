@@ -18,8 +18,11 @@
                 <vue-numeric-input  v-model="offerRequest.people.toddlers" :min="0" :max="10" :step="1"></vue-numeric-input>
                 <b class="group-label">Hotel</b>
                 <v-select :options="hotels" v-model="offerRequest.accommodation.hotelId" :reduce="hotel => hotel.id" :label="'name'"></v-select>
-                <span v-if="offerRequest.accommodation.hotelId">Hotel amenities: 
-                    <span v-for="amenity in hotels.find(hotel => hotel.id > offerRequest.accommodation.hotelId)" v-bind:key="amenity">{{amenity}}</span>
+                <span v-if="offerRequest.accommodation.hotelId">
+                    <b>Hotel amenities: </b>
+                    <span v-for="amenity in hotels.find(hotel => hotel.id === offerRequest.accommodation.hotelId).amenities" v-bind:key="amenity">
+                        <br/>{{amenity}}
+                    </span>
                 </span>
                 <span>Number of small rooms</span> 
                 <vue-numeric-input  v-model="offerRequest.accommodation.smallRooms" :min="0" :max="10" :step="1"></vue-numeric-input>
@@ -28,7 +31,7 @@
                 <span>Number of large rooms</span> 
                 <vue-numeric-input  v-model="offerRequest.accommodation.largeRooms" :min="0" :max="10" :step="1"></vue-numeric-input>
                 <b class="group-label">Promo code</b> 
-                <input  v-model="offerRequest.promoCode" placeholder="'promo code'"/>
+                <input  v-model="offerRequest.promoCode" placeholder="promo code"/>
 
                 <button class="availability-button" @click="checkAvailability()">Check availability</button>
                 <div class="ok-label" v-if="isAvailable === true">Trip is available in selected configuration</div>
@@ -41,9 +44,9 @@
 
                 <div v-if="order && !order.isFinalized" class="payment-tile flex-column">
                     <b class="group-label">Credit card data</b>
-                    <span>{{"Price: " + order.price}}</span>
+                    <span>{{"Price: " + order.price + " PLN"}}</span>
                     <input v-model="creditCardData.creditCardNumber" placeholder="Number"/>
-                    <input type="number" v-model="creditCardData.cvCoder" placeholder="CV"/>
+                    <input type="number" v-model="creditCardData.cvCode" placeholder="CV"/>
                     <input v-model="creditCardData.expirationDate" placeholder="Exp date"/>
                     <span v-if="order.paymentError" class="error-label">Payment unsuccesful</span>
                     <button class="availability-button" @click="payForOrder()">Pay for order</button>
@@ -100,7 +103,6 @@ export default {
     },
     created() {
         this.offerRequest.tourId = this.trip.id;
-        this.offerRequest.transportationTo.departure = this.trip.arrival;
         this.setHotels();
     },
     methods: {
@@ -128,12 +130,12 @@ export default {
         payForOrder() {
             this.$http.post('/api/payments/pay', {paymentId: this.order.paymentId, cardData: this.creditCardData})
             .then(res => {
-                this.order.isFinalized = true;
-                this.order.paymentError = false;
+                this.$set(this.order, 'isFinalized', true);
+                this.$set(this.order, 'paymentError', false);
             })
-            .catch(erro => {
-                this.order.isFinalized = false;
-                this.order.paymentError = true;
+            .catch(error => {
+                this.$set(this.order, 'isFinalized', false);
+                this.$set(this.order, 'paymentError', true);
             });
 
             this.creditCardData = {};
