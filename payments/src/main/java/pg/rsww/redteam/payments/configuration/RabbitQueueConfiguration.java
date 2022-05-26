@@ -14,6 +14,7 @@ public class RabbitQueueConfiguration {
 
     public static final String CANCEL_RESERVATION_QUEUE = "cancel-reservation";
     public static final String CREATE_PAYMENT_QUEUE = "create-payment";
+    public static final String PAYMENT_MADE_QUEUE="payment-made";
 
     @Bean
     public Queue cancelPaymentQueue() {
@@ -23,6 +24,11 @@ public class RabbitQueueConfiguration {
     @Bean
     public Queue createPaymentQueue() {
         return new Queue(CREATE_PAYMENT_QUEUE);
+    }
+
+    @Bean
+    public Queue paymentMadeQueue() {
+        return new Queue(PAYMENT_MADE_QUEUE);
     }
 
     @Bean

@@ -1,6 +1,8 @@
 package pg.rsww.redteam.payments.services;
 
 import lombok.AllArgsConstructor;
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 import pg.rsww.redteam.payments.models.CreatePaymentRequest;
 import pg.rsww.redteam.payments.models.Payment;
@@ -16,6 +18,8 @@ import java.util.UUID;
 public class PaymentService {
     private final CardPaymentProvider cardPaymentProvider;
     private final PaymentForOrderRepository paymentRepository;
+    private final Queue paymentMadeQueue;
+    private final RabbitTemplate rabbitTemplate;
 
     public void pay(MakePaymentRequest request) throws InvalidPaymentException {
         final Payment payment = paymentRepository.findById(request.getPaymentId()).orElse(null);
@@ -66,6 +70,12 @@ public class PaymentService {
 
         payment.setStatus(PaymentStatus.SUCCESSFUL);
         paymentRepository.saveAndFlush(payment);
+
+        sendPaymentStatusChangedEvent(payment);
+    }
+
+    private void sendPaymentStatusChangedEvent(Payment payment) {
+        rabbitTemplate.convertAndSend(paymentMadeQueue.getName(), payment.getOrderId());
     }
 
 }

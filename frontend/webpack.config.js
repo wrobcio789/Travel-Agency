@@ -51,22 +51,22 @@ module.exports = {
     overlay: true,
     proxy: {
       '/api/payments' : {
-        target: 'http://localhost:8081',
+        target: 'http://payment-service:8080',
         changeOrigin: true,
         secure: false
       },
       '/api/customers' : {
-        target: 'http://localhost:8082',
+        target: 'http://customer-service:8080',
         changeOrigin: true,
         secure: false
       },
       '/api/offers' : {
-        target: 'http://localhost:8083',
+        target: 'http://offer-service:80',
         changeOrigin: true,
         secure: false
       },
       '/api/orders' : {
-        target: 'http://localhost:8084',
+        target: 'http://order-service:80',
         changeOrigin: true,
         secure: false
       }

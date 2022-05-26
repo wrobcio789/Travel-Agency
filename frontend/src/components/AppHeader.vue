@@ -4,7 +4,10 @@
             <span>{{"Logged as " + username}}</span>
             <button type="button" v-on:click="logout()">Logout</button>
         </div>
-        <h2>{{title}}</h2>
+        <div v-if="username" class="orders-button">
+            <button type="button" v-on:click="seeOrders()">SeeOrders</button>
+        </div>
+        <h2 v-on:click="seeOffers()">{{title}}</h2>
     </div>
 </template>
 
@@ -27,6 +30,14 @@ export default {
         logout() {
             this.$store.commit('clearCredentials');
             this.$router.push({path: "/"});
+        },
+        seeOrders() {
+            this.$router.push({path: "orders"});
+        },
+        seeOffers() {
+            if (this.username) {
+                this.$router.push({path: "offers"});
+            }
         }
     }
 }
@@ -52,5 +63,11 @@ export default {
     margin-top: 0;
     float: right;
     padding-right: 15px;
+}
+
+.orders-button{
+    margin-top: 0;
+    float: left;
+    padding-left: 15px;
 }
 </style>>

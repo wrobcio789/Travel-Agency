@@ -11,11 +11,11 @@ spring:
     init:
       platform: postgres
   datasource:
-    url: jdbc:postgresql://localhost:16832/payments_mcsv
+    url: jdbc:postgresql://host.docker.internal:16832/payments_mcsv
     username: postgres
     password: root
   rabbitmq:
-    host: localhost
+    host: rabbitmq
     port: 5672
     password: guest
     username: guest
