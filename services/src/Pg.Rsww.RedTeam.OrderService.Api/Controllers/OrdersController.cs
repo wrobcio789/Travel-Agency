@@ -66,10 +66,7 @@ public class OrdersController : Controller
 	public async Task<List<OrderListing>> PostListOrders()
 	{
 		var customerId = (string)HttpContext.Items["CustomerId"];
-		if (customerId == null)
-		{
-			return null;
-		}
+
 		var orders = await _orderService.GetOrders(customerId);
 		var orderListings = _mapper.Map<List<OrderListing>>(orders);
 		return orderListings;

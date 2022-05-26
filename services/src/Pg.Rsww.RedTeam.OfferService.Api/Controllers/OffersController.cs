@@ -47,7 +47,7 @@ public class OffersController : Controller
 			return new OfferAvailabilityResponse
 			{
 				IsAvailable = false,
-				Price = 0.00m,
+				Price = 0.00m
 			};
 		}
 		return result;
