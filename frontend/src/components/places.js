@@ -130,6 +130,7 @@ const transportationTypes = [
     {code: "BUS", label: "bus"},
     {code: "PLANE", label: "plane"},
     {code: "TRAIN", label: "train"},
+    {code: "OWN", label: "own"},
 ]
 
 export function getArrivalPlaces() {
