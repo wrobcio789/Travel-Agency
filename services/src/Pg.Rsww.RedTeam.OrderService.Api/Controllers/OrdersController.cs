@@ -29,7 +29,11 @@ public class OrdersController : Controller
 		_logger = logger;
 	}
 
-
+	/// <summary>
+	/// Endpoint for making order for specific customer
+	/// </summary>
+	/// <param name="simpleOfferRequest"></param>
+	/// <returns></returns>
 	[HttpPost("Make")]
 	public async Task<OrderResponse> PostMakeOrder([FromBody] SimpleOfferRequest simpleOfferRequest)
 	{
@@ -61,7 +65,10 @@ public class OrdersController : Controller
 			Price = response.Price
 		};
 	}
-
+	/// <summary>
+	/// Endpoint for listing orders for specific customer
+	/// </summary>
+	/// <returns></returns>
 	[HttpGet("List")]
 	public async Task<List<OrderListing>> PostListOrders()
 	{

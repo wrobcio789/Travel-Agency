@@ -14,6 +14,10 @@ public class LoadController : Controller
 		_loaderService = loaderService;
 	}
 
+	/// <summary>
+	/// Endpoint for forcing full data load from Tour Operator
+	/// </summary>
+	/// <returns></returns>
 	[HttpGet]
 	public async Task<bool> LoadAll()
 	{

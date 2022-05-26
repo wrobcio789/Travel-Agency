@@ -23,6 +23,11 @@ public class OffersController : Controller
 		_mapper = mapper;
 	}
 
+	/// <summary>
+	/// Endpoint for searching offers
+	/// </summary>
+	/// <param name="tourRequest"></param>
+	/// <returns></returns>
 	[HttpPost("Search")]
 	public async Task<List<TourResponse>> PostSearch([FromBody] TourRequest tourRequest)
 	{
@@ -37,6 +42,11 @@ public class OffersController : Controller
 		return response;
 	}
 
+	/// <summary>
+	/// Endpoint for checking if offer is available
+	/// </summary>
+	/// <param name="simpleOfferRequest"></param>
+	/// <returns></returns>
 	[HttpPost("Availability")]
 	public async Task<OfferAvailabilityResponse> PostAvailability([FromBody] SimpleOfferRequest simpleOfferRequest)
 	{
@@ -53,7 +63,11 @@ public class OffersController : Controller
 		return result;
 	}
 
-
+	/// <summary>
+	/// Endpoint for listing hotels with amenities
+	/// </summary>
+	/// <param name="place"></param>
+	/// <returns></returns>
 	[HttpGet("Hotels")]
 	public async Task<List<HotelListingResponse>> GetHotels(string place)
 	{
@@ -63,6 +77,10 @@ public class OffersController : Controller
 		return response;
 	}
 
+	/// <summary>
+	/// Endpoint for listing departure locations for transportation
+	/// </summary>
+	/// <returns></returns>
 	[HttpGet("Transport/Departure")]
 	public async Task<List<string>> GetDepartures()
 	{
