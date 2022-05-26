@@ -1,3 +1,4 @@
+using System.Reflection;
 using Pg.Rsww.RedTeam.OfferService.Application;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.HttpLogging;
@@ -18,7 +19,12 @@ builder.Services
 	.AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 builder.Services
 	.AddEndpointsApiExplorer()
-	.AddSwaggerGen();
+	.AddSwaggerGen(c =>
+	{
+		var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+		var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+		c.IncludeXmlComments(xmlPath);
+	});
 
 var app = builder.Build();
 app.UseHttpLogging();
