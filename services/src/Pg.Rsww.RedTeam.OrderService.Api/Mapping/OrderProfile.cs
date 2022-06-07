@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using Pg.Rsww.RedTeam.Common.Models.Offer;
-using Pg.Rsww.RedTeam.Common.Models.Offer.Request;
+using Pg.Rsww.RedTeam.Common.Models.Offer.Simple;
 using Pg.Rsww.RedTeam.OrderService.Api.Models;
 using Pg.Rsww.RedTeam.OrderService.Application.Models.Entities;
-using SimpleAccommodation = Pg.Rsww.RedTeam.Common.Models.Offer.Request.SimpleAccommodation;
+using SimpleAccommodation = Pg.Rsww.RedTeam.Common.Models.Offer.Simple.SimpleAccommodation;
 
 namespace Pg.Rsww.RedTeam.OrderService.Api.Mapping;
 

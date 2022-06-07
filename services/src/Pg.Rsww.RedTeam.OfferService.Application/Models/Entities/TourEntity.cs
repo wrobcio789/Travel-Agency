@@ -1,13 +1,9 @@
-﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
+﻿using Pg.Rsww.RedTeam.DataStorage.Models;
 
 namespace Pg.Rsww.RedTeam.OfferService.Application.Models.Entities;
 
-public class TourEntity : IEquatable<TourEntity>
+public class TourEntity : Entity, IEquatable<TourEntity>
 {
-	[BsonId]
-	[BsonRepresentation(BsonType.ObjectId)]
-	public string? Id { get; set; }
 
 	public string Title { get; set; } = null!;
 
@@ -23,13 +19,14 @@ public class TourEntity : IEquatable<TourEntity>
 
 	public decimal Price { get; set; }
 
-	#region Equatable
+	public bool Enabled { get; set; }
 
+	#region Equatable
 	public bool Equals(TourEntity? other)
 	{
 		if (ReferenceEquals(null, other)) return false;
 		if (ReferenceEquals(this, other)) return true;
-		return Id == other.Id && Title == other.Title && Arrival == other.Arrival && City == other.City && Country == other.Country && StartDate.Equals(other.StartDate) && EndDate.Equals(other.EndDate) && Price == other.Price;
+		return Title == other.Title && Arrival == other.Arrival && City == other.City && Country == other.Country && StartDate.Equals(other.StartDate) && EndDate.Equals(other.EndDate) && Price == other.Price && Enabled == other.Enabled;
 	}
 
 	public override bool Equals(object? obj)
@@ -42,7 +39,7 @@ public class TourEntity : IEquatable<TourEntity>
 
 	public override int GetHashCode()
 	{
-		return HashCode.Combine(Id, Title, Arrival, City, Country, StartDate, EndDate, Price);
+		return HashCode.Combine(Title, Arrival, City, Country, StartDate, EndDate, Price, Enabled);
 	}
 
 	public static bool operator ==(TourEntity? left, TourEntity? right)

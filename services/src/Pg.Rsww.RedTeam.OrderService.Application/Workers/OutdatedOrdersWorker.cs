@@ -8,18 +8,18 @@ namespace Pg.Rsww.RedTeam.OrderService.Application.Workers;
 
 public class OutdatedOrdersWorker : BackgroundService
 {
-	private readonly OrderRepository _orderDbService;
+	private readonly OrderRepository _orderRepository;
 	private readonly QueueSendService _sendService;
 	private readonly ILogger<OutdatedOrdersWorker> _logger;
 	private const string QueueName = "cancel-reservation";
 
 	public OutdatedOrdersWorker(
-		OrderRepository orderDbService, 
+		OrderRepository orderRepository, 
 		QueueSendService sendService,
 		ILogger<OutdatedOrdersWorker> logger
 	)
 	{
-		_orderDbService = orderDbService;
+		_orderRepository = orderRepository;
 		_sendService = sendService;
 		_logger = logger;
 	}
@@ -34,7 +34,7 @@ public class OutdatedOrdersWorker : BackgroundService
 				try
 				{
 					var maxDateTime = DateTime.UtcNow.AddMinutes(-1);
-					var reservations = await _orderDbService.CancelOutdatedReservations(maxDateTime);
+					var reservations = await _orderRepository.CancelOutdatedReservations(maxDateTime);
 					if (reservations.Any())
 					{
 						var jsonBody = JsonConvert.SerializeObject(reservations.Select(x => x.Id));

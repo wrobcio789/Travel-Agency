@@ -1,14 +1,10 @@
-﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-using Pg.Rsww.RedTeam.Common.Models.Offer;
+﻿using Pg.Rsww.RedTeam.Common.Models.Offer;
+using Pg.Rsww.RedTeam.DataStorage.Models;
 
 namespace Pg.Rsww.RedTeam.OfferService.Application.Models.Entities;
 
-public class OfferEntity
+public class OfferEntity : Entity
 {
-	[BsonId]
-	[BsonRepresentation(BsonType.ObjectId)]
-	public string? Id { get; set; }
 
 	public string TourId { get; set; } = null!;
 

@@ -11,19 +11,19 @@ namespace Pg.Rsww.RedTeam.OrderService.Application.Services;
 
 public class OrderService
 {
-	private readonly OrderRepository _orderDbService;
+	private readonly OrderRepository _orderRepository;
 	private readonly RpcClientService _rpcClientService;
 	private readonly QueueSendService _queueSendService;
 	private readonly ILogger<OrderService> _logger;
 
 	public OrderService(
-		OrderRepository orderDBService,
+		OrderRepository orderRepository,
 		RpcClientService rpcClientService,
 		QueueSendService queueSendService,
 		ILogger<OrderService> logger
 	)
 	{
-		_orderDbService = orderDBService;
+		_orderRepository = orderRepository;
 		_rpcClientService = rpcClientService;
 		_queueSendService = queueSendService;
 		_logger = logger;
@@ -38,7 +38,7 @@ public class OrderService
 			return null;
 		}
 		
-		var orderId = await _orderDbService.CreateAsync(reservation.OfferId, customerId);
+		var orderId = await _orderRepository.CreateAsync(reservation.OfferId, customerId);
 
 
 		var paymentId = InitPayment(reservation.Price, orderId);
@@ -47,7 +47,7 @@ public class OrderService
 			return null;
 		}
 
-		await _orderDbService.AddPaymentToOrder(orderId, paymentId);
+		await _orderRepository.AddPaymentToOrder(orderId, paymentId);
 
 
 		return new OrderResponse
@@ -93,7 +93,7 @@ public class OrderService
 
 	public async Task<List<OrderEntity>> GetOrders(string customerId)
 	{
-		var orders = await _orderDbService.GetAsync(customerId);
+		var orders = await _orderRepository.GetAsync(customerId);
 		return orders;
 	}
 }

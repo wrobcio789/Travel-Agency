@@ -1,4 +1,4 @@
-﻿namespace TourOperator.Models;
+﻿namespace TourOperator.Models.Api;
 
 public class Tour
 {
@@ -19,4 +19,6 @@ public class Tour
 	public string End { get; set; }
 	
 	public int Days { get; set; }
+	
+	public bool Enabled { get; set; } = true;
 }

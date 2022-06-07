@@ -19,7 +19,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pg.Rsww.RedTeam.OrderServic
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pg.Rsww.RedTeam.OfferService.Api", "src\Pg.Rsww.RedTeam.OfferService.Api\Pg.Rsww.RedTeam.OfferService.Api.csproj", "{FDDA22B9-5CEE-46CD-A63E-B08FBEBB106D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pg.Rsww.RedTeam.Common", "src\Pg.Rsww.RedTeam.Common\Pg.Rsww.RedTeam.Common.csproj", "{CB61399B-505A-4D65-88BD-F9EB114ACA68}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pg.Rsww.RedTeam.Common", "src\Pg.Rsww.RedTeam.Common\Pg.Rsww.RedTeam.Common.csproj", "{CB61399B-505A-4D65-88BD-F9EB114ACA68}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "external", "external", "{80095B6E-F0E2-4F94-9C50-25B93C8B4884}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TourOperator", "src\TourOperator\TourOperator.csproj", "{FDFCEE24-0F31-4CD7-B830-814F8E583EF0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,6 +59,10 @@ Global
 		{CB61399B-505A-4D65-88BD-F9EB114ACA68}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CB61399B-505A-4D65-88BD-F9EB114ACA68}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CB61399B-505A-4D65-88BD-F9EB114ACA68}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FDFCEE24-0F31-4CD7-B830-814F8E583EF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDFCEE24-0F31-4CD7-B830-814F8E583EF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDFCEE24-0F31-4CD7-B830-814F8E583EF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDFCEE24-0F31-4CD7-B830-814F8E583EF0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -67,6 +75,7 @@ Global
 		{D7734221-2888-434C-8D87-4E8EFCD91EE0} = {6ED6CA67-9BD8-47C5-945A-271FE00DF599}
 		{FDDA22B9-5CEE-46CD-A63E-B08FBEBB106D} = {6ED6CA67-9BD8-47C5-945A-271FE00DF599}
 		{CB61399B-505A-4D65-88BD-F9EB114ACA68} = {6ED6CA67-9BD8-47C5-945A-271FE00DF599}
+		{FDFCEE24-0F31-4CD7-B830-814F8E583EF0} = {80095B6E-F0E2-4F94-9C50-25B93C8B4884}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {391EC5D0-3087-42BD-B5AF-C8D15340CF25}

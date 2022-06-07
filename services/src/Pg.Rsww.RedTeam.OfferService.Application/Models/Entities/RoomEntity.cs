@@ -7,9 +7,6 @@ namespace Pg.Rsww.RedTeam.OfferService.Application.Models.Entities;
 
 public class RoomEntity
 {
-	[BsonId]
-	[BsonRepresentation(BsonType.ObjectId)]
-	public string? Id { get; set; }
 
 	[BsonRepresentation(BsonType.String)]
 	public RoomSize Size { get; set; }

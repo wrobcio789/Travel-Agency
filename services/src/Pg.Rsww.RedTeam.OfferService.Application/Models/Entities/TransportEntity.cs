@@ -1,15 +1,12 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using Pg.Rsww.RedTeam.Common.Models.Offer;
+using Pg.Rsww.RedTeam.DataStorage.Models;
 
 namespace Pg.Rsww.RedTeam.OfferService.Application.Models.Entities;
 
-public class TransportEntity
+public class TransportEntity : Entity
 {
-	[BsonId]
-	[BsonRepresentation(BsonType.ObjectId)]
-	public string? Id { get; set; }
-
 	public string Arrival { get; set; } = null!;
 
 	public string Departure { get; set; } = null!;

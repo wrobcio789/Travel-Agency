@@ -16,7 +16,8 @@ public class TourProfile : Profile
 			.ForMember(dest => dest.EndDate, act => act.MapFrom(src => ParseDate(src.End)))
 			.ForMember(dest => dest.Title, act => act.MapFrom(src => src.Title))
 			.ForMember(dest => dest.City, act => act.MapFrom(src => src.City))
-			.ForMember(dest => dest.Country, act => act.MapFrom(src => src.Country));
+			.ForMember(dest => dest.Country, act => act.MapFrom(src => src.Country))
+			.ForMember(dest => dest.Enabled, act => act.MapFrom(src => src.Enabled));
 
 		CreateMap<TourEntity, Models.TourResponse>();
 	}

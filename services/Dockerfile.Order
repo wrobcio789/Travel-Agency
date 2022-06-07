@@ -3,9 +3,6 @@ WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-ARG PROJECT_NAME=Pg.Rsww.RedTeam.Order.Service.Api
-
-
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY ["src/Pg.Rsww.RedTeam.OrderService.Api/Pg.Rsww.RedTeam.OrderService.Api.csproj", "Pg.Rsww.RedTeam.OrderService.Api/"]

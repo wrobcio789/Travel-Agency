@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Pg.Rsww.RedTeam.DataStorage.Models;
 using Pg.Rsww.RedTeam.DataStorage.Repositories;
 using Pg.Rsww.RedTeam.OfferService.Application.ExternalServices.TourOperator.Clients;
 using Pg.Rsww.RedTeam.OfferService.Application.ExternalServices.TourOperator.Models;
@@ -102,7 +103,7 @@ public class LoaderService
 	}
 
 
-	private async Task InsertAsync<T>(bool overrideData, IList<T> elements, MongoBaseRepository<T> repository)
+	private async Task InsertAsync<T>(bool overrideData, IList<T> elements, MongoBaseRepository<T> repository) where T:Entity
 	{
 		var isEmpty = true;
 		if (!overrideData)

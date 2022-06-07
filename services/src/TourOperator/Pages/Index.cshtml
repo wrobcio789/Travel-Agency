@@ -1,0 +1,100 @@
+﻿@page
+@using TourOperator.Extensions
+@model TourOperator.Pages.IndexModel
+@{
+	<style type="text/css">
+		.tg {
+			border-collapse: collapse;
+			border-spacing: 0;
+		}
+
+		.tg td {
+			border-color: black;
+			border-style: solid;
+			border-width: 1px;
+			font-family: Arial, sans-serif;
+			font-size: 14px;
+			overflow: hidden;
+			padding: 6px 3px;
+			word-break: normal;
+			vertical-align: top;
+		}
+		.new {
+			background-color: #e8fae3;
+		}
+		.old {
+			background-color: #fae3e3;
+		}
+		.json {
+			white-space: pre-wrap;
+			font-size: 10px !important;
+		}
+
+		.tg th {
+			border-color: black;
+			border-style: solid;
+			border-width: 1px;
+			font-family: Arial, sans-serif;
+			font-size: 14px;
+			font-weight: normal;
+			overflow: hidden;
+			padding: 6px 3px;
+			word-break: normal;
+		}
+
+		.tg .tg-0pky {
+			border-color: inherit;
+			text-align: left;
+			vertical-align: top
+		}
+	</style>
+	<table class="tg">
+		<thead >
+		<tr >
+			<td>
+				<center>
+					<b>Index</b>
+				</center>
+			</td>
+			<td >
+				<center>
+					<b>Id</b>
+				</center>
+			</td>
+			<td>
+				<center>
+					<b>Date</b>
+				</center>
+			</td>
+			<td>
+				<center>
+					<b>New</b>
+				</center>
+			</td>
+			<td>
+				<center>
+					<b>Old</b>
+				</center>
+			</td>
+
+		</tr>
+		</thead>
+		<tbody>
+		@{
+			foreach (var (item,index) in Model.Changes.WithIndex())
+			{
+				<tr>
+					<td> @index</td>
+					<td> @item.Id</td>
+					<td> @item.DateTime</td>
+					<td> @item.Database</td>
+					<td width=500px class="json new"> @item.New</td>
+					<td width=500px class="json old"> @item.Old</td>
+				</tr>
+			}
+		}
+		</tbody>
+
+
+	</table>
+}

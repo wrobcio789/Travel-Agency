@@ -19,4 +19,6 @@ public class TourResponse
 	public string End { get; set; }
 	
 	public int Days { get; set; }
+
+	public bool Enabled { get; set; }
 }

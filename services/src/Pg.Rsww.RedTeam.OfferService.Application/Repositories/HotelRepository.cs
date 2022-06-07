@@ -38,14 +38,6 @@ public class HotelRepository : MongoBaseRepository<HotelEntity>
 		return await _collection.Find(filter).ToListAsync();
 	}
 
-
-	public async Task<List<RoomEntity>> GetRoomsAsync(List<string> rooms)
-	{
-		var allHotels = await _collection.Find(_ => true).ToListAsync();
-
-		return allHotels.SelectMany(x => x.Rooms).Where(x => rooms.Contains(x.Id)).ToList();
-	}
-
 	public async Task<HotelEntity> GetHotel(string hotelId)
 	{
 		if (string.IsNullOrWhiteSpace(hotelId))
