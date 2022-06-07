@@ -1,22 +1,24 @@
 ﻿using TourOperator.Services;
 
-namespace TourOperator.Workers
+namespace TourOperator.Workers;
+
+public class LoaderWorker : BackgroundService
 {
-	public class LoaderWorker : BackgroundService
+	private readonly LoaderService _service;
+	private readonly ILogger<LoaderWorker> _logger;
+
+	public LoaderWorker(
+		LoaderService service,
+		ILogger<LoaderWorker> logger
+	)
 	{
-		private readonly LoaderService _service;
-		private readonly ILogger<LoaderWorker> _logger;
+		_service = service;
+		_logger = logger;
+	}
 
-		public LoaderWorker(
-			LoaderService service,
-			ILogger<LoaderWorker> logger
-			)
-		{
-			_service = service;
-			_logger = logger;
-		}
-
-		protected override async Task ExecuteAsync(CancellationToken cancellationToken)
+	protected override async Task ExecuteAsync(CancellationToken cancellationToken)
+	{
+		await Task.Run(async () =>
 		{
 			var tryCount = 3;
 			var initialWaitTime = TimeSpan.FromSeconds(5);
@@ -26,14 +28,15 @@ namespace TourOperator.Workers
 				var success = await _service.FullLoadAsync(false);
 				if (success)
 				{
-					_logger.Log(LogLevel.Information,"Initial data loaded successfully");
+					_logger.Log(LogLevel.Information, "Initial data loaded successfully");
 					break;
 				}
+
 				_logger.Log(LogLevel.Information, "Could not load initial data");
-				Thread.Sleep(initialWaitTime);
 				initialWaitTime += incrementWaitTime;
 				tryCount--;
+				Thread.Sleep(initialWaitTime);
 			}
-		}
+		}, cancellationToken);
 	}
 }

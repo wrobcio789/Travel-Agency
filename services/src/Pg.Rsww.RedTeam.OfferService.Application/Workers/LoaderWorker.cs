@@ -12,7 +12,7 @@ namespace Pg.Rsww.RedTeam.OfferService.Application.Workers
 		public LoaderWorker(
 			LoaderService service,
 			ILogger<LoaderWorker> logger
-			)
+		)
 		{
 			_service = service;
 			_logger = logger;
@@ -20,22 +20,26 @@ namespace Pg.Rsww.RedTeam.OfferService.Application.Workers
 
 		protected override async Task ExecuteAsync(CancellationToken cancellationToken)
 		{
-			var tryCount = 3;
-			var initialWaitTime = TimeSpan.FromSeconds(5);
-			var incrementWaitTime = TimeSpan.FromSeconds(10);
-			while (tryCount > 0)
+			await Task.Run(async () =>
 			{
-				var success = await _service.FullLoadAsync(false);
-				if (success)
+				var tryCount = 3;
+				var initialWaitTime = TimeSpan.FromSeconds(5);
+				var incrementWaitTime = TimeSpan.FromSeconds(10);
+				while (tryCount > 0)
 				{
-					_logger.Log(LogLevel.Information,"Initial data loaded successfully");
-					break;
+					var success = await _service.FullLoadAsync(false);
+					if (success)
+					{
+						_logger.Log(LogLevel.Information, "Initial data loaded successfully");
+						break;
+					}
+
+					_logger.Log(LogLevel.Information, "Could not load initial data");
+					Thread.Sleep(initialWaitTime);
+					initialWaitTime += incrementWaitTime;
+					tryCount--;
 				}
-				_logger.Log(LogLevel.Information, "Could not load initial data");
-				Thread.Sleep(initialWaitTime);
-				initialWaitTime += incrementWaitTime;
-				tryCount--;
-			}
+			}, cancellationToken);
 		}
 	}
 }

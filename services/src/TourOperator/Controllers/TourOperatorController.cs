@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using TourOperator.Models.Api;
 using TourOperator.Models.Entities;
+using TourOperator.Repositories;
 using TourOperator.Services;
 using TourOperator.Utils;
 
@@ -11,20 +12,29 @@ namespace TourOperator.Controllers;
 public class TourOperatorController : ControllerBase
 {
 	private readonly LoaderService _loaderService;
+	private readonly HotelRepository _hotelRepository;
+	private readonly TransportRepository _transportRepository;
+	private readonly TourRepository _tourRepository;
 	private readonly ILogger<TourOperatorController> _logger;
 
 	public TourOperatorController(
 		LoaderService loaderService,
+		HotelRepository hotelRepository,
+		TransportRepository transportRepository,
+		TourRepository tourRepository,
 		ILogger<TourOperatorController> logger)
 	{
 		_loaderService = loaderService;
+		_hotelRepository = hotelRepository;
+		_transportRepository = transportRepository;
+		_tourRepository = tourRepository;
 		_logger = logger;
 	}
 
 	[HttpGet("Hotels")]
-	public List<Hotel> GetAccommodations()
+	public async Task<List<HotelEntity>> GetAccommodationsAsync()
 	{
-		return FileUtils.GetData<List<Hotel>>("hotels.json");
+		return await _hotelRepository.GetAllAsync();
 	}
 
 	[HttpPost("Hotels")]
@@ -35,9 +45,9 @@ public class TourOperatorController : ControllerBase
 	}
 
 	[HttpGet("Transports")]
-	public List<Transport> GetTransports()
+	public async Task<List<TransportEntity>> GetTransportsAsync()
 	{
-		return FileUtils.GetData<List<Transport>>("transports.json");
+		return await _transportRepository.GetAllAsync();
 	}
 
 	[HttpPost("Transports")]
@@ -48,9 +58,9 @@ public class TourOperatorController : ControllerBase
 	}
 
 	[HttpGet("Tours")]
-	public List<Tour> GetOffers()
+	public async Task<List<TourEntity>> GetToursAsync()
 	{
-		return FileUtils.GetData<List<Tour>>("tours.json");
+		return await _tourRepository.GetAllAsync();
 	}
 
 	[HttpPost("Tours")]

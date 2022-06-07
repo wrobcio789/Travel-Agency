@@ -29,7 +29,7 @@ public class OffersController : Controller
 	/// <param name="tourRequest"></param>
 	/// <returns></returns>
 	[HttpPost("Search")]
-	public async Task<List<TourResponse>> PostSearch([FromBody] TourRequest tourRequest)
+	public async Task<List<TourSearchResponse>> PostSearch([FromBody] TourRequest tourRequest)
 	{
 		var tours = await _offerService.SearchToursAsync(
 			tourRequest.Departure,
@@ -37,7 +37,7 @@ public class OffersController : Controller
 			tourRequest.DepartureDate
 		);
 
-		var response = _mapper.Map<List<TourResponse>>(tours);
+		var response = _mapper.Map<List<TourSearchResponse>>(tours);
 
 		return response;
 	}

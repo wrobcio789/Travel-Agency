@@ -89,8 +89,9 @@ public abstract class MongoBaseRepository<T> where T : Entity
 	}
 
 
-	public async Task UpsertAsync(IList<T> elements)
+	public async Task<List<T>> UpsertAsync(IList<T> elements)
 	{
+		var updateElements = new List<T>();
 		foreach (var element in elements)
 		{
 			var tour = await GetAsync(element.Id);
@@ -107,7 +108,9 @@ public abstract class MongoBaseRepository<T> where T : Entity
 			{
 				await UpdateAsync(element, tour);
 			}
+			updateElements.Add(element);
 		}
+		return updateElements;
 	}
 
 	public async Task<T> GetAsync(string id)
@@ -125,6 +128,11 @@ public abstract class MongoBaseRepository<T> where T : Entity
 
 		var elements = await _collection.Find(filter).ToListAsync();
 		return elements.FirstOrDefault();
+	}
+
+	public async Task<List<T>> GetAllAsync()
+	{
+		return await _collection.Find(x => true).ToListAsync();
 	}
 
 	public async Task<List<T>> GetNewestAsync(int limit)

@@ -1,6 +1,6 @@
 namespace Pg.Rsww.RedTeam.OfferService.Api.Models;
 
-public class TourResponse
+public class TourSearchResponse
 {
 	public string Id { get; set; }
 	public string Title { get; set; }
