@@ -2,6 +2,7 @@ using System.Reflection;
 using Pg.Rsww.RedTeam.OfferService.Application;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.HttpLogging;
+using Pg.Rsww.RedTeam.OfferService.Api.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +27,8 @@ builder.Services
 		c.IncludeXmlComments(xmlPath);
 	});
 
+builder.Services.AddSignalR();
+
 var app = builder.Build();
 app.UseHttpLogging();
 
@@ -36,9 +39,18 @@ if (app.Environment.IsDevelopment())
 	app.UseSwaggerUI(x => { x.SwaggerEndpoint("/swagger/v1/swagger.yaml", "Offer Service API"); });
 }
 // app.UseHttpsRedirection();
+app.UseCors(builder =>
+	builder
+		.WithOrigins("https://frontend:8080")
+		.AllowAnyMethod()
+		.AllowAnyHeader()
+		.AllowCredentials()
+);
+
 
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<OfferHub>("/offerHub");
 
 app.Run();
