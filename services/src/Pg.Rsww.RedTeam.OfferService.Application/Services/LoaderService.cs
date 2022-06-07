@@ -108,28 +108,28 @@ public class LoaderService
 		}
 	}
 
-	public async Task<bool> LoadDelta(List<TourEntity> tours)
+	public async Task<List<TourEntity>> LoadDelta(List<TourEntity> tours)
 	{
-		if (tours == null) return false;
-		
+		if (tours == null) return new List<TourEntity>();
 
-		await _tourRepository.UpsertAsync(tours);
-		return true;
+
+		var result = await _tourRepository.UpsertAsync(tours);
+		return result;
 	}
 
-	public async Task<bool> LoadDelta(List<HotelEntity> hotels)
+	public async Task<List<HotelEntity>> LoadDelta(List<HotelEntity> hotels)
 	{
-		if (hotels == null) return false;
+		if (hotels == null) return new List<HotelEntity>();
 
-		await _hotelRepository.UpsertAsync(hotels);
-		return true;
+		var result = await _hotelRepository.UpsertAsync(hotels);
+		return result;
 	}
 
-	public async Task<bool> LoadDelta(List<TransportEntity> transport)
+	public async Task<List<TransportEntity>> LoadDelta(List<TransportEntity> transport)
 	{
-		if (transport == null) return false;
+		if (transport == null) return new List<TransportEntity>();
 
-		await _transportRepository.UpsertAsync(transport);
-		return true;
+		var result = await _transportRepository.UpsertAsync(transport);
+		return result;
 	}
 }
