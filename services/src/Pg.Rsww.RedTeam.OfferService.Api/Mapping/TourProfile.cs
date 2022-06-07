@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using AutoMapper;
+using Pg.Rsww.RedTeam.OfferService.Application.ExternalServices.TourOperator.Models;
 using Pg.Rsww.RedTeam.OfferService.Application.Models.Entities;
-using TourResponse = Pg.Rsww.RedTeam.OfferService.Application.ExternalServices.TourOperator.Models.TourResponse;
 
 namespace Pg.Rsww.RedTeam.OfferService.Api.Mapping;
 
@@ -19,7 +19,7 @@ public class TourProfile : Profile
 			.ForMember(dest => dest.Country, act => act.MapFrom(src => src.Country))
 			.ForMember(dest => dest.Enabled, act => act.MapFrom(src => src.Enabled));
 
-		CreateMap<TourEntity, Models.TourResponse>();
+		CreateMap<TourEntity, Models.TourSearchResponse>();
 	}
 
 	private DateTime ParseDate(string date)

@@ -1,5 +1,7 @@
 ﻿using Pg.Rsww.RedTeam.DataStorage;
 using Pg.Rsww.RedTeam.DataStorage.Repositories;
+using TourOperator.ExternalServices.OfferService.Clients;
+using TourOperator.ExternalServices.OfferService.Settings;
 using TourOperator.Repositories;
 using TourOperator.Services;
 using TourOperator.Workers;
@@ -11,6 +13,7 @@ public static class SetupExtension
 	public static IServiceCollection AddApplication(this IServiceCollection services, IConfiguration configuration)
 	{
 		AddDatabase(services, configuration);
+		AddOfferService(services, configuration);
 
 		services.AddTransient<LoaderService>();
 		services.AddHostedService<LoaderWorker>();
@@ -21,6 +24,12 @@ public static class SetupExtension
 		return services;
 	}
 
+	private static void AddOfferService(IServiceCollection services, IConfiguration configuration)
+	{
+		services.Configure<OfferServiceSettings>(configuration.GetSection(nameof(OfferServiceSettings)));
+		services.AddHttpClient();
+		services.AddTransient<OfferServiceClient>();
+	}
 	private static void AddDatabase(IServiceCollection services, IConfiguration configuration)
 	{
 		services.Configure<MongoSettings>(configuration.GetSection(nameof(MongoSettings)));

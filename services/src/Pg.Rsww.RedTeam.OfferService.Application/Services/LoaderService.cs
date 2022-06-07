@@ -1,8 +1,6 @@
-﻿using AutoMapper;
-using Pg.Rsww.RedTeam.DataStorage.Models;
+﻿using Pg.Rsww.RedTeam.DataStorage.Models;
 using Pg.Rsww.RedTeam.DataStorage.Repositories;
 using Pg.Rsww.RedTeam.OfferService.Application.ExternalServices.TourOperator.Clients;
-using Pg.Rsww.RedTeam.OfferService.Application.ExternalServices.TourOperator.Models;
 using Pg.Rsww.RedTeam.OfferService.Application.Models.Entities;
 using Pg.Rsww.RedTeam.OfferService.Application.Repositories;
 
@@ -13,7 +11,6 @@ public class LoaderService
 	private readonly TourRepository _tourRepository;
 	private readonly HotelRepository _hotelRepository;
 	private readonly TransportRepository _transportRepository;
-	private readonly IMapper _mapper;
 
 	private readonly TourOperatorClient _client;
 
@@ -21,13 +18,12 @@ public class LoaderService
 		TourRepository tourRepository,
 		HotelRepository hotelRepository,
 		TransportRepository transportRepository,
-		IMapper mapper, TourOperatorClient client
+		TourOperatorClient client
 	)
 	{
 		_tourRepository = tourRepository;
 		_hotelRepository = hotelRepository;
 		_transportRepository = transportRepository;
-		_mapper = mapper;
 		_client = client;
 	}
 
@@ -42,33 +38,30 @@ public class LoaderService
 		var existingTransportCount = await _transportRepository.GetCountAsync();
 		var existingTourCount = await _tourRepository.GetCountAsync();
 
-		List<HotelResponse> hotelsResponse = null;
-		List<TransportResponse> transportsResponse = null;
-		List<TourResponse> toursResponses = null;
+		List<HotelEntity> hotels = null;
+		List<TransportEntity> transports = null;
+		List<TourEntity> tours = null;
 
 		if (overrideData || existingHotelCount == 0)
 		{
-			hotelsResponse = await _client.GetAsync<List<HotelResponse>>("Hotels");
+			hotels = await _client.GetAsync<List<HotelEntity>>("Hotels");
 		}
 
 		if (overrideData || existingTransportCount == 0)
 		{
-			transportsResponse =
-				await _client.GetAsync<List<TransportResponse>>("Transports");
+			transports =
+				await _client.GetAsync<List<TransportEntity>>("Transports");
 		}
 
 		if (overrideData || existingTourCount == 0)
 		{
-			toursResponses =
-				await _client.GetAsync<List<TourResponse>>("Tours");
+			tours = await _client.GetAsync<List<TourEntity>>("Tours");
 		}
 
 
 		var areAllLoaded = true;
-		if (hotelsResponse != null)
+		if (hotels != null && hotels.Any())
 		{
-			var hotels = _mapper.Map<List<HotelEntity>>(hotelsResponse).Distinct().ToList();
-
 			await InsertAsync(overrideData, hotels, _hotelRepository);
 		}
 		else
@@ -76,10 +69,8 @@ public class LoaderService
 			areAllLoaded = false;
 		}
 
-		if (transportsResponse != null)
+		if (transports != null && transports.Any())
 		{
-			var transports = _mapper.Map<List<TransportEntity>>(transportsResponse).Distinct().ToList();
-
 			await InsertAsync(overrideData, transports, _transportRepository);
 		}
 		else
@@ -87,9 +78,8 @@ public class LoaderService
 			areAllLoaded = false;
 		}
 
-		if (toursResponses != null)
+		if (tours != null && tours.Any())
 		{
-			var tours = _mapper.Map<List<TourEntity>>(toursResponses);
 			var distinctTours = tours.Distinct().ToList();
 
 			await InsertAsync(overrideData, distinctTours, _tourRepository);
@@ -116,5 +106,30 @@ public class LoaderService
 		{
 			await repository.CreateAsync(elements, true);
 		}
+	}
+
+	public async Task<bool> LoadDelta(List<TourEntity> tours)
+	{
+		if (tours == null) return false;
+		
+
+		await _tourRepository.UpsertAsync(tours);
+		return true;
+	}
+
+	public async Task<bool> LoadDelta(List<HotelEntity> hotels)
+	{
+		if (hotels == null) return false;
+
+		await _hotelRepository.UpsertAsync(hotels);
+		return true;
+	}
+
+	public async Task<bool> LoadDelta(List<TransportEntity> transport)
+	{
+		if (transport == null) return false;
+
+		await _transportRepository.UpsertAsync(transport);
+		return true;
 	}
 }

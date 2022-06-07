@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using TourOperator.Models.Entities;
 using TourOperator.Repositories;
 
 namespace TourOperator.Services;
@@ -12,7 +13,7 @@ public class DataChangeService
 		_tourRepository = tourRepository;
 	}
 
-	public async Task ChangeRandomPrice(int count)
+	public async Task<List<TourEntity>> ChangeRandomPrice(int count)
 	{
 		var random = new Random();
 		var records = await _tourRepository.GetRandomAsync(count);
@@ -22,9 +23,10 @@ public class DataChangeService
 		}
 
 		await _tourRepository.UpsertAsync(records);
+		return records;
 	}
 
-	public async Task ChangeRandomTitle(int count)
+	public async Task<List<TourEntity>> ChangeRandomTitle(int count)
 	{
 		var records = await _tourRepository.GetRandomAsync(count);
 		foreach (var record in records)
@@ -48,9 +50,10 @@ public class DataChangeService
 		}
 
 		await _tourRepository.UpsertAsync(records);
+		return records;
 	}
 
-	public async Task ChangeEnabled(int count)
+	public async Task<List<TourEntity>> ChangeEnabled(int count)
 	{
 		var records = await _tourRepository.GetRandomAsync(count);
 		foreach (var record in records)
@@ -59,5 +62,6 @@ public class DataChangeService
 		}
 
 		await _tourRepository.UpsertAsync(records);
+		return records;
 	}
 }

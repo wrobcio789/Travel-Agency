@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Pg.Rsww.RedTeam.DataStorage.Models;
 using Pg.Rsww.RedTeam.DataStorage.Repositories;
+using TourOperator.ExternalServices.OfferService.Clients;
 using TourOperator.Models.Api;
 using TourOperator.Models.Entities;
 using TourOperator.Repositories;
@@ -13,18 +14,21 @@ public class LoaderService
 	private readonly TourRepository _tourRepository;
 	private readonly HotelRepository _hotelRepository;
 	private readonly TransportRepository _transportRepository;
+	private readonly OfferServiceClient _client;
 	private readonly IMapper _mapper;
 
 	public LoaderService(
 		TourRepository tourRepository,
 		HotelRepository hotelRepository,
 		TransportRepository transportRepository,
+		OfferServiceClient client,
 		IMapper mapper
 	)
 	{
 		_tourRepository = tourRepository;
 		_hotelRepository = hotelRepository;
 		_transportRepository = transportRepository;
+		_client = client;
 		_mapper = mapper;
 	}
 
@@ -115,17 +119,26 @@ public class LoaderService
 
 	public async Task DeltaLoadAsync(IList<TourEntity> elements)
 	{
-		await _tourRepository.UpsertAsync(elements);
-		//#TODO call offer service
+		var records = await _tourRepository.UpsertAsync(elements);
+		if (records.Any())
+		{
+			await _client.PostAsync("TourDelta", records);
+		}
 	}
 	public async Task DeltaLoadAsync(IList<TransportEntity> elements)
 	{
-		await _transportRepository.UpsertAsync(elements);
-		//#TODO call offer service
+		var records = await _transportRepository.UpsertAsync(elements);
+		if (records.Any())
+		{
+			await _client.PostAsync("TransportDelta", records);
+		}
 	}
 	public async Task DeltaLoadAsync(IList<HotelEntity> elements)
 	{
-		await _hotelRepository.UpsertAsync(elements);
-		//#TODO call offer service
+		var records = await _hotelRepository.UpsertAsync(elements);
+		if (records.Any())
+		{
+			await _client.PostAsync("HotelsDelta", records);
+		}
 	}
 }

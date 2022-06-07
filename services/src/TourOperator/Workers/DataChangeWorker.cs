@@ -1,31 +1,41 @@
-﻿using TourOperator.Services;
+﻿using TourOperator.ExternalServices.OfferService.Clients;
+using TourOperator.Models.Entities;
+using TourOperator.Services;
 
-namespace TourOperator.Workers
+namespace TourOperator.Workers;
+
+public class DataChangeWorker : BackgroundService
 {
-	public class DataChangeWorker : BackgroundService
+	private readonly DataChangeService _service;
+	private readonly OfferServiceClient _client;
+	private readonly ILogger<LoaderWorker> _logger;
+
+	public DataChangeWorker(
+		DataChangeService service,
+		OfferServiceClient client,
+		ILogger<LoaderWorker> logger
+	)
 	{
-		private readonly DataChangeService _service;
-		private readonly ILogger<LoaderWorker> _logger;
+		_service = service;
+		_client = client;
+		_logger = logger;
+	}
 
-		public DataChangeWorker(
-			DataChangeService service,
-			ILogger<LoaderWorker> logger
-			)
+	protected override async Task ExecuteAsync(CancellationToken cancellationToken)
+	{
+		await Task.Run(async () =>
 		{
-			_service = service;
-			_logger = logger;
-		}
+			Thread.Sleep(TimeSpan.FromMinutes(1));
 
-		protected override async Task ExecuteAsync(CancellationToken cancellationToken)
-		{
 			var waitTime = TimeSpan.FromSeconds(30);
 			while (true)
 			{
+				var changes = new List<TourEntity>();
 				try
 				{
-					await _service.ChangeEnabled(3);
-					await _service.ChangeRandomPrice(3);
-					await _service.ChangeRandomTitle(3);
+					changes.AddRange(await _service.ChangeEnabled(3));
+					changes.AddRange(await _service.ChangeRandomPrice(3));
+					changes.AddRange(await _service.ChangeRandomTitle(3));
 				}
 				catch (Exception ex)
 				{
@@ -33,8 +43,13 @@ namespace TourOperator.Workers
 					throw;
 				}
 
+				if (changes.Any())
+				{
+					await _client.PostAsync("TourDelta", changes);
+				}
+
 				Thread.Sleep(waitTime);
 			}
-		}
+		}, cancellationToken);
 	}
 }
