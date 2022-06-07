@@ -4,6 +4,7 @@ using Pg.Rsww.RedTeam.Common.Models.Offer;
 using Pg.Rsww.RedTeam.Common.Models.Offer.Simple;
 using Pg.Rsww.RedTeam.OfferService.Api.Models;
 using Pg.Rsww.RedTeam.OfferService.Application.Models;
+using Pg.Rsww.RedTeam.OfferService.Application.Services;
 
 namespace Pg.Rsww.RedTeam.OfferService.Api.Controllers;
 
@@ -86,5 +87,11 @@ public class OffersController : Controller
 	{
 		var departures = await _offerService.GetDeparturesAsync();
 		return departures;
+	}
+
+	[HttpGet("Statistics")]
+	public async Task<StatisticsAggregate> GetDepartures(int head)
+	{
+		return await _offerService.GetTopStatistics(head);
 	}
 }

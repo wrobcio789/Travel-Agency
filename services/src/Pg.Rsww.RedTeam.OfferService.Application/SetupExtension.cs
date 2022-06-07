@@ -48,5 +48,6 @@ public static class SetupExtension
 		services.AddSingleton<TransportRepository>();
 		services.AddSingleton<HotelRepository>();
 		services.AddSingleton<OfferRepository>();
+		services.AddSingleton<StatisticsRepository>();
 	}
 }
