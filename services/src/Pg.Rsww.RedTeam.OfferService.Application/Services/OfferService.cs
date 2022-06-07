@@ -14,6 +14,7 @@ public class OfferService
 	private readonly TourRepository _tourRepository;
 	private readonly HotelRepository _hotelRepository;
 	private readonly TransportRepository _transportRepository;
+	private readonly StatisticsRepository _statisticsRepository;
 	private readonly IMapper _mapper;
 	private readonly ILogger<OfferService> _logger;
 
@@ -22,6 +23,7 @@ public class OfferService
 		TourRepository tourRepository,
 		HotelRepository hotelRepository,
 		TransportRepository transportRepository,
+		StatisticsRepository statisticsRepository,
 		IMapper mapper,
 		ILogger<OfferService> logger
 	)
@@ -30,6 +32,7 @@ public class OfferService
 		_tourRepository = tourRepository;
 		_hotelRepository = hotelRepository;
 		_transportRepository = transportRepository;
+		_statisticsRepository = statisticsRepository;
 		_mapper = mapper;
 		_logger = logger;
 	}
@@ -70,7 +73,7 @@ public class OfferService
 		var offer = _mapper.Map<OfferEntity>(offerRequest);
 		if (offer == null)
 		{
-			_logger.Log(LogLevel.Error,"Could not map offer request to offer");
+			_logger.Log(LogLevel.Error, "Could not map offer request to offer");
 			return null;
 		}
 
@@ -256,5 +259,18 @@ public class OfferService
 			.Select(g => g.First().Departure)
 			.ToList();
 		return departures;
+	}
+
+	public async Task<StatisticsAggregate> GetTopStatistics(int head)
+	{
+		var transport = await _statisticsRepository.GetStatistics(StatisticsDomains.Transport, head);
+		var hotels = await _statisticsRepository.GetStatistics(StatisticsDomains.Hotel, head);
+		var tours = await _statisticsRepository.GetStatistics(StatisticsDomains.Tour, head);
+		return new StatisticsAggregate
+		{
+			Transports = transport.Select(x => new TransportStatistics { Code = x.Name, Visits = x.Count }).ToList(),
+			Hotels = hotels.Select(x => new HotelStatistics() { HotelName = x.Name, Visits = x.Count }).ToList(),
+			Tours = tours.Select(x => new TourPlaceStatistics() { Departure = x.Name, Visits = x.Count }).ToList()
+		};
 	}
 }
