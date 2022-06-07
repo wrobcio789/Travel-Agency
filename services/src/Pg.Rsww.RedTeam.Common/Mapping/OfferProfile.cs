@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Pg.Rsww.RedTeam.Common.Models.Offer;
-using Pg.Rsww.RedTeam.Common.Models.Offer.Request;
-using SimpleAccommodation = Pg.Rsww.RedTeam.Common.Models.Offer.Request.SimpleAccommodation;
+using Pg.Rsww.RedTeam.Common.Models.Offer.Simple;
 
 namespace Pg.Rsww.RedTeam.Common.Mapping;
 
@@ -11,7 +10,7 @@ public class OfferProfile : Profile
 	{
 		CreateMap<SimpleOfferRequest, OfferRequest>()
 			.ForMember(dest => dest.Accommodation, act => act.MapFrom(src => src.Accommodation));
-		CreateMap<SimpleAccommodation, Common.Models.Offer.Accommodation>()
+		CreateMap<SimpleAccommodation, Accommodation>()
 			.ForMember(dest => dest.Rooms, act => act.MapFrom(src => new List<Room>
 			{
 				new()

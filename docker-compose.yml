@@ -6,8 +6,8 @@ services:
     image: tour-operator
     restart: always
     build:
-      context: ./TourOperator
-      dockerfile: Dockerfile
+      context: ./services
+      dockerfile: Dockerfile.TourOperator
     environment:
       ASPNETCORE_URLS: http://+:80
       ASPNETCORE_HTTPS_PORT: https://+:443

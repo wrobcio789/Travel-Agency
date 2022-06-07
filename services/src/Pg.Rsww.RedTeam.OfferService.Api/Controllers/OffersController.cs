@@ -1,7 +1,7 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Pg.Rsww.RedTeam.Common.Models.Offer;
-using Pg.Rsww.RedTeam.Common.Models.Offer.Request;
+using Pg.Rsww.RedTeam.Common.Models.Offer.Simple;
 using Pg.Rsww.RedTeam.OfferService.Api.Models;
 using Pg.Rsww.RedTeam.OfferService.Application.Models;
 

@@ -1,4 +1,4 @@
-namespace Pg.Rsww.RedTeam.Common.Models.Offer.Request;
+namespace Pg.Rsww.RedTeam.Common.Models.Offer.Simple;
 
 public class SimpleAccommodation
 {

@@ -14,6 +14,11 @@ public class TourRepository : MongoBaseRepository<TourEntity>
 
 	public async Task<List<TourEntity>> GetAsync(string? departure, string? arrival, DateTime departureDate)
 	{
+		return await GetAsync(departure, arrival, departureDate, true);
+	}
+
+	public async Task<List<TourEntity>> GetAsync(string? departure, string? arrival, DateTime departureDate, bool enabled)
+	{
 		var builder = Builders<TourEntity>.Filter;
 		var filter = builder.Empty;
 
@@ -22,6 +27,15 @@ public class TourRepository : MongoBaseRepository<TourEntity>
 			var arrivalFilter = builder.Eq(x => x.Arrival, arrival);
 			filter &= arrivalFilter;
 		}
+
+		if (departureDate != null)
+		{
+			var departureDateFilter = builder.Gte(x => x.StartDate, departureDate);
+			filter &= departureDateFilter;
+		}
+
+		var enabledFilter = builder.Eq(x => x.Enabled, enabled);
+		filter &= enabledFilter;
 
 		return await _collection.Find(filter).ToListAsync();
 	}

@@ -1,4 +1,4 @@
-﻿namespace TourOperator.Models;
+﻿namespace TourOperator.Models.Api;
 
 public class Transport
 {

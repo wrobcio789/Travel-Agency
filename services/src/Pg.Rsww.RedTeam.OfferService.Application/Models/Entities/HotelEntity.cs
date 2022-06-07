@@ -1,15 +1,11 @@
-﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
+﻿using MongoDB.Bson.Serialization.Attributes;
 using System.Text.Json.Serialization;
+using Pg.Rsww.RedTeam.DataStorage.Models;
 
 namespace Pg.Rsww.RedTeam.OfferService.Application.Models.Entities;
 
-public class HotelEntity
+public class HotelEntity : Entity
 {
-	[BsonId]
-	[BsonRepresentation(BsonType.ObjectId)]
-	public string? Id { get; set; }
-
 	public string Country { get; set; } = null!;
 
 	public string City { get; set; } = null!;

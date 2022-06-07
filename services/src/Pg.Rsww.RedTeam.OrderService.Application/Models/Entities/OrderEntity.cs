@@ -1,15 +1,12 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using Pg.Rsww.RedTeam.Common.Models;
+using Pg.Rsww.RedTeam.DataStorage.Models;
 
 namespace Pg.Rsww.RedTeam.OrderService.Application.Models.Entities;
 
-public class OrderEntity
+public class OrderEntity : Entity
 {
-	[BsonId]
-	[BsonRepresentation(BsonType.ObjectId)]
-	public string? Id { get; set; }
-	
 	public string CustomerId { get; set; }
 
 	public string OfferId { get; set; }

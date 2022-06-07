@@ -10,7 +10,7 @@ using Pg.Rsww.RedTeam.OrderService.Application.Models.Entities;
 
 namespace Pg.Rsww.RedTeam.OrderService.Application.Repositories;
 
-public class OrderRepository : MongoBaseRepository<OrderEntity>
+public class OrderRepository : MongoChangeLoggingRepository<OrderEntity>
 {
 	private readonly ILogger<OrderRepository> _logger;
 
