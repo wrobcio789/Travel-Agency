@@ -11,8 +11,13 @@ public static class SetupExtension
 	public static IServiceCollection AddApplication(this IServiceCollection services, IConfiguration configuration)
 	{
 		AddDatabase(services, configuration);
+
 		services.AddTransient<LoaderService>();
 		services.AddHostedService<LoaderWorker>();
+
+		services.AddTransient<DataChangeService>();
+		services.AddHostedService<DataChangeWorker>();
+
 		return services;
 	}
 

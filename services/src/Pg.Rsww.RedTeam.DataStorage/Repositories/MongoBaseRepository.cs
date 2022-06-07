@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 using Newtonsoft.Json;
 using Pg.Rsww.RedTeam.DataStorage.Extensions;
 using Pg.Rsww.RedTeam.DataStorage.Models;
@@ -139,6 +140,11 @@ public abstract class MongoBaseRepository<T> where T : Entity
 		}
 
 		return await results.ToListAsync();
+	}
+
+	public async Task<List<T>> GetRandomAsync(int count)
+	{
+		return await _collection.AsQueryable().Sample(count).ToListAsync();
 	}
 
 	public virtual async Task AfterAction(ChangelogEntity entity)
