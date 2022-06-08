@@ -35,7 +35,7 @@ public class LoadController : Controller
 	public async Task<bool> LoadDeltaTours([FromBody] List<TourEntity> tours)
 	{
 		var result = await _loaderService.LoadDelta(tours);
-		await _hubContext.Clients.All.SendAsync("Message", "TourChange", JsonConvert.SerializeObject(result));
+		await _hubContext.Clients.All.SendAsync("Message", "TourChange", JsonConvert.SerializeObject(result.Select(x=>x.Id)));
 
 		return result.Any();
 	}
@@ -44,7 +44,7 @@ public class LoadController : Controller
 	public async Task<bool> LoadDeltaTransports([FromBody] List<TransportEntity> transports)
 	{
 		var result = await _loaderService.LoadDelta(transports);
-		await _hubContext.Clients.All.SendAsync("Message", "TransportChange", JsonConvert.SerializeObject(result));
+		await _hubContext.Clients.All.SendAsync("Message", "TransportChange", JsonConvert.SerializeObject(result.Select(x=>x.Id)));
 
 		return result.Any();
 	}
@@ -53,7 +53,7 @@ public class LoadController : Controller
 	public async Task<bool> LoadDeltaHotels([FromBody] List<HotelEntity> hotels)
 	{
 		var result = await _loaderService.LoadDelta(hotels);
-		await _hubContext.Clients.All.SendAsync("Message", "HotelChange", JsonConvert.SerializeObject(result));
+		await _hubContext.Clients.All.SendAsync("Message", "HotelChange", JsonConvert.SerializeObject(result.Select(x => x.Id)));
 
 		return result.Any();
 	}
