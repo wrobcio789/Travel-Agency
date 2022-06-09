@@ -1,7 +1,9 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
 using Pg.Rsww.RedTeam.OfferService.Api.Hubs;
+using Pg.Rsww.RedTeam.OfferService.Api.Models;
 using Pg.Rsww.RedTeam.OfferService.Application.Models.Entities;
 using Pg.Rsww.RedTeam.OfferService.Application.Services;
 
@@ -13,11 +15,13 @@ public class LoadController : Controller
 {
 	private readonly LoaderService _loaderService;
 	private readonly IHubContext<OfferHub> _hubContext;
+	private readonly IMapper _mapper;
 
-	public LoadController(LoaderService loaderService, IHubContext<OfferHub> hubContext)
+	public LoadController(LoaderService loaderService, IHubContext<OfferHub> hubContext, IMapper mapper)
 	{
 		_loaderService = loaderService;
 		_hubContext = hubContext;
+		_mapper = mapper;
 	}
 
 	/// <summary>
@@ -35,7 +39,8 @@ public class LoadController : Controller
 	public async Task<bool> LoadDeltaTours([FromBody] List<TourEntity> tours)
 	{
 		var result = await _loaderService.LoadDelta(tours);
-		await _hubContext.Clients.All.SendAsync("Message", "TourChange", JsonConvert.SerializeObject(result.Select(x=>x.Id)));
+		var content = _mapper.Map<List<TourSearchResponse>>(result);
+		await _hubContext.Clients.All.SendAsync("Message", "TourChange", JsonConvert.SerializeObject(content));
 
 		return result.Any();
 	}
