@@ -17,7 +17,7 @@ export default class ServerEventsManager {
         this.connection.on("Message", function(type, content){
             console.log(type);
             console.log(content);
-            self.dispatchers[type].dispatch(content);
+            self.dispatchers[type].dispatch(JSON.parse(content));
         })
 
 

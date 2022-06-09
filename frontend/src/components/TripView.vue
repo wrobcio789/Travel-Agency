@@ -149,7 +149,7 @@ export default {
         },
         handleTripChange(changedTrips) {
             if(!this.order){
-                updatedTrip = changedTrips.find(changedTrip => changedTrip.id == this.trip.id);
+                const updatedTrip = changedTrips.find(changedTrip => changedTrip.id == this.trip.id);
                 if(!updatedTrip) {
                     return;
                 }

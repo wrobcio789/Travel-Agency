@@ -70,7 +70,6 @@ export default {
             this.$router.push({ name: "trip", params: { trip: trip } });
         },
         handleOfferChange() {
-            console.log("Offer change logged");
             this.$refs.snackbar.info('Some trips have changed. Reoloaded results.');
             this.onFilterChange();
         }
