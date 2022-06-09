@@ -104,6 +104,12 @@ export default {
     created() {
         this.offerRequest.tourId = this.trip.id;
         this.setHotels();
+        this.$eventsManager.getOfferBoughtDispatcher().add(this.handleTripBought);
+        this.$eventsManager.getTourChangeDispatcher().add(this.handleTripChange);
+    },
+    beforeDestroy() {
+        this.$eventsManager.getOfferBoughtDispatcher().remove(this.handleTripBought);
+        this.$eventsManager.getTourChangeDispatcher().remove(this.handleTripChange);
     },
     methods: {
         checkAvailability() {
@@ -139,6 +145,29 @@ export default {
             });
 
             this.creditCardData = {};
+        },
+        handleTripChange(changedTrips) {
+            if(!this.order){
+                updatedTrip = changedTrips.find(changedTrip => changedTrip.id == this.trip.id);
+                if(!updatedTrip) {
+                    return;
+                }
+
+                this.trip = updatedTrip;
+                this.$refs.snackbar.info('Selected trip changed');
+            }
+
+        },
+        handleTripBought(boughtTripId) {
+            if(boughtTripId == this.trip.id){
+                this.$refs.snackbar.info('Selected trip has just been booked!');
+                this.handleAvailabilityMayChange();
+            }
+        },
+        handleAvailabilityMayChange() {
+            if(!this.order){
+                this.checkAvailability();
+            }
         }
     },
     props: {

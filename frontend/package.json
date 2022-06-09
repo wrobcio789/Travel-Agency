@@ -11,6 +11,7 @@
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
   },
   "dependencies": {
+    "@microsoft/signalr": "^5.0.12",
     "moment": "^2.29.1",
     "vue": "^2.5.11",
     "vue-numeric-input": "^2.0.0",
@@ -18,6 +19,7 @@
     "vue-router": "^3.5.3",
     "vue-select": "^3.18.3",
     "vuejs-datepicker": "^1.6.2",
+    "vuejs-snackbar": "^4.0.1",
     "vuex": "^3.6.2"
   },
   "browserslist": [

@@ -71,6 +71,10 @@ export default {
     },
     created() {
         this.onFilterChange();
+        this.$eventsManager.getTourChangeDispatcher().add(this.onFilterChange);
+    },
+    beforeDestroy() {
+        this.$eventsManager.getTourChangeDispatcher().remove(this.onFilterChange);
     },
     components: { TripView }
 }
