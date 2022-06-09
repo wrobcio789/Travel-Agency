@@ -70,6 +70,19 @@ public class OfferService
 
 	public async Task<OfferAvailabilityResponse> IsOfferAvailableAsync(OfferRequest offerRequest)
 	{
+		var result = await IsOfferAvailableAsyncInner(offerRequest);
+		if (result == null)
+		{
+			return new OfferAvailabilityResponse
+			{
+				IsAvailable = false,
+				Price = 0.00m
+			};
+		}
+		return result;
+	}
+	private async Task<OfferAvailabilityResponse> IsOfferAvailableAsyncInner(OfferRequest offerRequest)
+	{
 		var offer = _mapper.Map<OfferEntity>(offerRequest);
 		if (offer == null)
 		{
@@ -81,6 +94,12 @@ public class OfferService
 		if (tour == null)
 		{
 			_logger.Log(LogLevel.Warning, $"Tour could not be found, id:{offerRequest.TourId}");
+			return null;
+		}
+
+		if (!tour.Enabled)
+		{
+			_logger.Log(LogLevel.Warning, $"Tour is disabled, id:{offerRequest.TourId}");
 			return null;
 		}
 
