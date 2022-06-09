@@ -38,8 +38,7 @@ public class CompleteReservationQueueCommand : IQueueCommand
 		if (success)
 		{
 			var offer = await _offerRepository.GetAsync(offerId);
-			await _hubContext.Clients.All.SendAsync("Message", "OfferBought",
-				JsonConvert.SerializeObject(offer.TourId));
+			await _hubContext.Clients.All.SendAsync("Message", "OfferBought", offer.TourId);
 
 			var transportStart = await _transportRepository.GetAsync(offer.Reservation.StartTransport);
 			var transportEnd = await _transportRepository.GetAsync(offer.Reservation.EndTransport);
