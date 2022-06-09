@@ -42,7 +42,7 @@ export default {
 
 <style scoped>
 #login{
-    margin-top: 10%;
+    margin: 10% 0;
     display: block;
     text-align: center;
 }

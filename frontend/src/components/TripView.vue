@@ -1,5 +1,6 @@
 <template>
     <div class="trip-view">
+        <snackbar baseSize="4rem" ref="snackbar" :holdTime="5000" position="top-center"/>
         <div class="flex-row">
             <div class="searcher flex-1 flex-column">
                 <b class="group-label">Transport to {{trip.arrival}}</b> 

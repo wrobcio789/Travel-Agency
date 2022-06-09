@@ -1,5 +1,6 @@
 <template>
     <div class="offer-search-view">
+        <snackbar baseSize="4rem" ref="snackbar" :holdTime="5000" position="top-center"/>
         <div class="flex-row">
             <div class="searcher flex-1 flex-column">
                 <span>Destination</span> 
@@ -67,14 +68,19 @@ export default {
         },
         open(trip) {
             this.$router.push({ name: "trip", params: { trip: trip } });
+        },
+        handleOfferChange() {
+            console.log("Offer change logged");
+            this.$refs.snackbar.info('Some trips have changed. Reoloaded results.');
+            this.onFilterChange();
         }
     },
     created() {
         this.onFilterChange();
-        this.$eventsManager.getTourChangeDispatcher().add(this.onFilterChange);
+        this.$eventsManager.getTourChangeDispatcher().add(this.handleOfferChange);
     },
     beforeDestroy() {
-        this.$eventsManager.getTourChangeDispatcher().remove(this.onFilterChange);
+        this.$eventsManager.getTourChangeDispatcher().remove(this.handleOfferChange);
     },
     components: { TripView }
 }
@@ -85,6 +91,7 @@ export default {
 .offer-search-view {
     margin: 0 10%;
 }
+
 .flex-row{
     display: flex;
     flex-direction: row;
