@@ -2,6 +2,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Pg.Rsww.RedTeam.OfferService.Api.Hubs;
 using Pg.Rsww.RedTeam.OfferService.Api.Models;
 using Pg.Rsww.RedTeam.OfferService.Application.Models.Entities;
@@ -40,7 +41,13 @@ public class LoadController : Controller
 	{
 		var result = await _loaderService.LoadDelta(tours);
 		var content = _mapper.Map<List<TourSearchResponse>>(result);
-		await _hubContext.Clients.All.SendAsync("Message", "TourChange", JsonConvert.SerializeObject(content));
+		await _hubContext.Clients.All.SendAsync("Message", "TourChange",
+			JsonConvert.SerializeObject(content,
+				Formatting.Indented,
+				new JsonSerializerSettings
+				{
+					ContractResolver = new CamelCasePropertyNamesContractResolver()
+				}));
 
 		return result.Any();
 	}
