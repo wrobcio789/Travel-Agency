@@ -38,8 +38,6 @@ public class CompleteReservationQueueCommand : IQueueCommand
 		if (success)
 		{
 			var offer = await _offerRepository.GetAsync(offerId);
-			await _hubContext.Clients.All.SendAsync("Message", "OfferBought", offer.TourId);
-
 			var transportStart = await _transportRepository.GetAsync(offer.Reservation.StartTransport);
 			var transportEnd = await _transportRepository.GetAsync(offer.Reservation.EndTransport);
 			var hotel = await _hotelRepository.GetAsync(offer.Reservation.Accommodation.HotelId);
@@ -61,6 +59,8 @@ public class CompleteReservationQueueCommand : IQueueCommand
 			{
 				await _statisticsRepository.Add(StatisticsDomains.Transport, transportEnd.Type.ToString(), increment);
 			}
+
+			await _hubContext.Clients.All.SendAsync("Message", "OfferBought", offer.TourId);
 		}
 
 		return success;
