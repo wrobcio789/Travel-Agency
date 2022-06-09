@@ -41,7 +41,7 @@ if (app.Environment.IsDevelopment())
 // app.UseHttpsRedirection();
 app.UseCors(builder =>
 	builder
-		.WithOrigins("https://frontend:8080")
+		.SetIsOriginAllowed(x => true)
 		.AllowAnyMethod()
 		.AllowAnyHeader()
 		.AllowCredentials()
