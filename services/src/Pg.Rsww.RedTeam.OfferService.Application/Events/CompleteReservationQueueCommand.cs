@@ -60,7 +60,7 @@ public class CompleteReservationQueueCommand : IQueueCommand
 				await _statisticsRepository.Add(StatisticsDomains.Transport, transportEnd.Type.ToString(), increment);
 			}
 
-			await _hubContext.Clients.All.SendAsync("Message", "OfferBought", offer.TourId);
+			await _hubContext.Clients.All.SendAsync("Message", "OfferBought", JsonConvert.SerializeObject(offer.TourId));
 		}
 
 		return success;
