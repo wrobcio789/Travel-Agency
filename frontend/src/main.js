@@ -13,6 +13,9 @@ import vSelect from 'vue-select'
 import 'vue-select/dist/vue-select.css';
 import VueNumericInput from 'vue-numeric-input';
 import Datepicker from 'vuejs-datepicker';
+import Snackbar from 'vuejs-snackbar';
+
+import ServerEventsManager from './ServerEventsManager';
 
 Vue.use(Vuex);
 Vue.use(VueResource);
@@ -20,6 +23,7 @@ Vue.use(VueRouter);
 
 Vue.component('v-select', vSelect)
 Vue.component('datepicker', Datepicker)
+Vue.component('snackbar', Snackbar);
 
 Vue.use(VueNumericInput)
 
@@ -76,10 +80,14 @@ const routes = [
 
 const router = new VueRouter({routes});
 
+const eventsManager = new ServerEventsManager();
+eventsManager.init();
+
+Vue.prototype.$eventsManager = eventsManager;
+
 new Vue({
   el: '#app',
   render: h => h(App),
   store,
-
   router
 })
