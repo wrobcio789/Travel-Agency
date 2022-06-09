@@ -268,7 +268,7 @@ public class OfferService
 		var tours = await _statisticsRepository.GetStatistics(StatisticsDomains.Tour, head);
 		return new StatisticsAggregate
 		{
-			Transports = transport.Select(x => new TransportStatistics { Code = x.Name, Visits = x.Count }).ToList(),
+			Transports = transport.Select(x => new TransportStatistics { Code = x.Name.ToUpper(), Visits = x.Count }).ToList(),
 			Hotels = hotels.Select(x => new HotelStatistics() { HotelName = x.Name, Visits = x.Count }).ToList(),
 			Tours = tours.Select(x => new TourPlaceStatistics() { Departure = x.Name, Visits = x.Count }).ToList()
 		};
