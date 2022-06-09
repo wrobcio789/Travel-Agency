@@ -1,8 +1,7 @@
 <template>
   <div id="app">
-    '<snackbar baseSize="1rem" ref="snackbar" :holdTime="5000" position="top-center"/>'
     <app-header></app-header>
-    <router-view/>
+    <router-view class="content"/>
     <app-footer></app-footer>
   </div>
 </template>
@@ -19,7 +18,19 @@ export default {
 </script>
 
 <style>
-body {
+html, body {
   margin: 0;
+  height: 100%;
+}
+
+#app {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  flex: 5;
+  overflow: auto;
 }
 </style>

@@ -10,12 +10,15 @@ export default class ServerEventsManager {
         this.dispatchers[TOUR_CHANGE] = new EventsDispatcher();
 
         this.connection = new HubConnectionBuilder()
-            .withUrl("/api/offers")
+            .withUrl("/offerHub")
             .build();
 
-        Object.keys(this.dispatchers).forEach(
-            key => this.connection.on(data => { this.dispatchers[key].dispatch(data) })
-        );
+        const self = this;
+        this.connection.on("Message", function(type, content){
+            console.log(type);
+            console.log(content);
+            self.dispatchers[type].dispatch(content);
+        })
 
 
         this.connection.start()
