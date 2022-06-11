@@ -13,6 +13,6 @@ spring:
     init:
       platform: postgres
   datasource:
-    url: jdbc:postgresql://host.docker.internal:16832/customers_mcsv
+    url: jdbc:postgresql://host.docker.internal:5432/RSWW_175782_customers
     username: postgres
-    password: root
+    password: student

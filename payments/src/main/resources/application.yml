@@ -11,9 +11,9 @@ spring:
     init:
       platform: postgres
   datasource:
-    url: jdbc:postgresql://host.docker.internal:16832/payments_mcsv
+    url: jdbc:postgresql://host.docker.internal:5432/RSWW_175782_payments
     username: postgres
-    password: root
+    password: student
   rabbitmq:
     host: rabbitmq
     port: 5672
